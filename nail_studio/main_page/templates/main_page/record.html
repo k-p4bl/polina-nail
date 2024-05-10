@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+
+    {% load static %}
+    <link href="{% static 'main_page/vanilla-calendar/build/vanilla-calendar.min.css'%}" rel="stylesheet">
+    <script src="{% static 'main_page/vanilla-calendar/build/vanilla-calendar.min.js'%}" defer></script>
+    <script src="{% static 'main_page/js/phoneinput.js'%}"></script>
+    <title>Форма записи</title>
+</head>
+<body>
+<div class="record-block">
+    <form action="{% url 'sign_up' %}" method="post">
+        {% csrf_token %}
+        <div class="personal-data">
+            {{ form.non_field_errors }}
+            <div class="service">
+                <label for='{{ form.service.id_for_label }}' class="text-personal-data">{{ form.service.label }}</label>
+                {% if service == None %}
+                    {{ form.service }}
+                {% else %}
+                    <input type="text" name="service" id="service" value="{{ service }}" readonly>
+                {% endif %}
+                <span id="error-service" style="color: red; font-family: Arial;">{{ form.service.errors }}</span>
+                <script>
+                    document.querySelector('#service').addEventListener('input', function(e){
+                        let errorService = document.querySelector('#error-service');
+                        errorService.style = 'display: none';
+                    });
+                </script>
+            </div>
+            <div class="name">
+                <p class="text-personal-data">{{ form.person_name.label }}</p>
+                {{ form.person_name }}
+                <span id="error-name" style="color: red; font-family: Arial;">{{ form.person_name.errors }}</span>
+                <script>
+                    document.querySelector('#person-name').addEventListener('input', function(e){
+                        let errorName = document.querySelector('#error-name');
+                        errorName.style = 'display: none';
+                    });
+                </script>
+            </div>
+            <div class="number">
+                <p class="text-personal-data">{{ form.phone_number.label }}</p>
+                {{ form.phone_number }}
+                <span id="error-number" style="color: red; font-family: Arial;">{{ form.phone_number.errors }}</span>
+                <script>
+                    document.querySelector('#phone-number').addEventListener('input', function(e){
+                        let errorNumber = document.querySelector('#error-number');
+                        errorNumber.style = 'display: none';
+                    });
+                </script>
+            </div>
+        </div>
+
+        <div id="calendar"></div>
+        <div class="date-wrap">
+            {{ form.date }}
+            <span id="error-date" style="color: red; font-family: Arial;">{{ form.date.errors }}</span>
+        </div>
+
+        <div>
+            <div class="container">
+                <div class="time">
+                    {% for time in form.time %}
+                        <label class="time-btn-wrap">
+                            {{ time.tag }}
+                        <span class="time-btn">
+                            {{ time.choice_label }}
+                        </span>
+                        </label>
+                    {% endfor %}
+                </div>
+            </div>
+            <span id="error-time" style="color: red; font-family: Arial;">{{ form.time.errors }}</span>
+        </div>
+        <script>
+            let ten = document.querySelector('#id_time_0');
+            let thirteen = document.querySelector('#id_time_1');
+            let sixteen = document.querySelector('#id_time_2');
+            ten.disabled = true;
+            thirteen.disabled = true;
+            sixteen.disabled = true;
+
+            requestURL = "{% url 'validate_date' %}"
+
+            function sendRequest (method, url, date) {
+                return new Promise ((resolve, reject) => {
+                    const xhr = new XMLHttpRequest()
+
+                    xhr.open(method, url)
+
+                    xhr.responseType = 'json'
+                    xhr.setRequestHeader('Content-Type', 'application/json')
+
+                    xhr.onload = () => {
+                        if (xhr.status >= 400) {
+                            reject(xhr.response)
+                        } else {
+                            resolve(xhr.response)
+                        }
+                    }
+
+                    xhr.onerror = () => {
+                        reject(xhr.response)
+                    }
+                    xhr.send(JSON.stringify(date))
+                })
+            }
+
+
+            let dis = [];
+            {% if dates %}
+                {% for d in dates %}
+                    dis.push('{{d}}');
+                {% endfor %}
+            {% endif %}
+
+
+          document.addEventListener('DOMContentLoaded', () => {
+            const calendar = new VanillaCalendar('#calendar',
+             {
+                settings: {
+                    lang: 'ru-RU',
+                    range: {
+                        disablePast: true,
+                        disableWeekday: [1],
+                        disabled: dis,
+                    },
+                    visibility: {
+                        theme: 'light',
+                    },
+                },
+                actions: {
+                    clickDay(event, self) {
+                            let date = document.querySelector('#date');
+                            let errorDate = document.querySelector('#error-date');
+                            let errorTime = document.querySelector('#error-time');
+                            date.value = self.selectedDates
+                            errorDate.style = 'display: none';
+                            errorTime.style = 'display: none';
+
+                            sendRequest('POST', requestURL, self.selectedDates)
+                                .then(data => {
+                                    ten.disabled = data['10'];
+                                    if (ten.disabled) {
+                                        ten.checked = false
+                                    }
+                                    thirteen.disabled = data['13'];
+                                    if (thirteen.disabled) {
+                                        thirteen.checked = false
+                                    }
+                                    sixteen.disabled = data['16'];
+                                    if (sixteen.disabled) {
+                                        sixteen.checked = false
+                                    }
+                                })
+                                .catch(err => console.log(err))
+                    },
+                },
+            }
+            );
+            calendar.init();
+          });
+            if (ten.disabled) {
+                ten.checked = false
+            }
+            if (thirteen.disabled) {
+                thirteen.checked = false
+            }
+            if (sixteen.disabled) {
+                sixteen.checked = false
+            }
+        </script>
+
+        <div class="submit-wrap">
+            <button type="submit" id="submit">Записаться</button>
+        </div>
+        <p class="privacy-text">Нажимая "Записаться" вы соглашаетесь с <a style="color: black;" target="_blank" href="{% url 'privacy' %}">политикой конфиденциальности</a></p>
+        <style>
+            .privacy-text {
+                font-size: 0.8rem;
+                font-family: Arial;
+                text-align: center;
+                color: grey;
+            }
+        </style>
+    </form>
+</div>
+</body>
+</html>

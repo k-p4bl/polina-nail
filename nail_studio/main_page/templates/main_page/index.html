@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Маникюр Киренск</title>
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500&display=swap" rel="stylesheet">
+	<link
+  		rel="stylesheet"
+  		href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+	/>
+
+	<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+	{% load static %}
+	<link rel="stylesheet" type="text/css" href="{% static 'main_page/css/index.css' %}">
+</head>
+<body>
+
+<header class="header">
+	<div class="container">
+		<div class="wrapper-header-link">
+			<nav class="navigation">
+				<a class="nav-link" href="#main">Главная</a>
+				<a class="nav-link" href="#about">О себе</a>
+				<a class="nav-link" href="#services">Прайс-лист</a>
+				<a class="nav-link" href="#reviews">Отзывы</a>
+				<a class="nav-link" href="#contacts">Контакты</a>
+			</nav>
+			<div class="wrapper-button-make-an-appointment">
+				<div class="wrapper-icon">
+					<a href="https://vk.com/kirnails"><img id="vk_logo" src="{% static 'main_page/images/vk_logo.jpg' %}" width="30" height="30"></a>
+					<a href="https://chat.whatsapp.com/GQULPGO151S6nLrkp4Fkw8"><img id="wapp_logo" src="{% static 'main_page/images/wapp_logo.jpg' %}" width="30" height="30"></a>
+				</div>
+				<button class="button-make-an-appointment" onclick="location.href='{% url 'sign_up' %}'">
+					Записаться
+				</button>
+				<div class="hamburger-button">
+					<div class="hamburger-button-top"></div>
+					<div class="hamburger-button-middle"></div>
+					<div class="hamburger-button-bottom"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+
+<div class="intro" style="background: linear-gradient(#f7f7f7, 1%, #39B329, 80%, #f7f7f7);">
+	<div id="main" class="container">
+		<div class="intro__block">
+			<h1>
+				Мастер ногтевого сервиса
+			</h1>
+
+			<button class="button-online-req" onclick="location.href='{% url 'sign_up' %}'">
+				Онлайн запись
+			</button>
+		</div>
+	</div>
+</div>
+
+<div id="about" class="container">
+	<div class="about">
+		<div class="photos">
+			<div class="image-wrapp">
+				<img src="{% static 'main_page/images/Image(1).jpeg'%}">
+				<img src="{% static 'main_page/images/Image(2).jpeg'%}">
+			</div>
+		</div>
+		<div class="about-wrapp">
+			<h4>О себе</h4>
+			<p class="about-text">Молодой сертифицированный специалист, оказывающий услуги по маникюру уже на протяжении 3-х лет.<br>
+				За относительно небольшую цену я предлагаю: богатую палитру цветов, материалы высокого качества, всегда обработанные инструменты перед процедурой. </p>
+		</div>
+	</div>
+	<h4 class="text-portfolio">Некоторые из работ</h4>
+	<p class="text-portfolio-vk">Больше работ вы можете найти в<br>моей группе <a href="https://vk.com/kirnails">ВКонтакте</a></p>
+</div>
+<div class="portfolio">
+	<div class="container">
+		<div class="photo-wrapp">
+			<img src="{% static 'main_page/images/Image(3).jpeg'%}">
+			<img src="{% static 'main_page/images/Image(4).jpg'%}">
+			<img src="{% static 'main_page/images/Image(5).jpg'%}">
+			<img src="{% static 'main_page/images/Image(6).jpg'%}">
+			<img src="{% static 'main_page/images/Image(7).jpg'%}">
+			<img src="{% static 'main_page/images/Image(8).jpg'%}">
+			<img src="{% static 'main_page/images/Image(9).jpg'%}">
+			<img src="{% static 'main_page/images/Image(10).jpg'%}">
+			<img src="{% static 'main_page/images/Image(11).jpg'%}">
+			<img src="{% static 'main_page/images/Image(12).jpg'%}">
+			<img src="{% static 'main_page/images/Image(13).jpg'%}">
+			<img src="{% static 'main_page/images/Image(14).jpg'%}">
+			<img src="{% static 'main_page/images/Image(15).jpg'%}">
+			<img src="{% static 'main_page/images/Image(16).jpg'%}">
+		</div>
+	</div>
+</div>
+
+<div id="services" class="container">
+	<div class="services">
+		<h3>Прайс-лист</h3>
+		<div class="services-display">
+			{% for s in services %}
+				<div class="services-block">
+					<img class="services-img" src="/static/{{s.image}}" width="270" height="153">
+					<h2>{{ s.service }}</h2>
+					<p class="text-in-service-block">{{s.time_to_comp}} ч.</p>
+					<p class="text-in-service-block-120-rub">Снятие чужой работы: {{s.filming_work}} руб.</p>
+					<p class="text-in-service-block">Предоплата ({{ s.prepayment }} руб.)</p>
+					<p class="services-price"><b>{{ s.price }}</b> руб.</p>
+					<div class="services-button-wrapper">
+						<button class="services-button" onclick="location.href='{% url 'sign_up_with_args' s.service %}'">
+							Записаться
+						</button>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+
+		<div class="service-on-the-side">
+			{% for s in additional_services %}
+				<div class="services-block" id="on-the-side">
+					<h2>{{ s.service }}</h2>
+					<p class="services-price" id="price-on-the-side"><b>{{ s.price }}</b> руб.</p>
+					<div class="services-button-wrapper">
+						<button class="services-button" onclick="location.href='{% url 'sign_up_with_args' s.service %}'">
+							Записаться
+						</button>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+</div>
+
+<div id="reviews" class="container">
+	<div class="reviews">
+		<h5>Отзывы клиентов</h5>
+		<p class="reviews-feedback">Буду рада обратной связи.
+			Отправляйте свои отзывы на <b><a style="text-decoration: none; color: #000;" href="mailto:d.pauline.w@gmail.com">d.pauline.w@gmail.com</a></b></p>
+		<div class="swiper mySwiper">
+			<div class="swiper-wrapper">
+				<div class="swiper-slide">
+					<div class="reviews-wrapper">
+						<div class="reviews-image"></div>
+						<div class="reviews-text">
+							<p>Все очень классно. Все понравилось. Девочка просто умница, или одним словом молодец</p>
+							<p class="reviews-user-name">Агата</p>
+						</div>
+					</div>
+				</div>
+				<div class="swiper-slide">
+					<div class="reviews-wrapper">
+						<div class="reviews-image"></div>
+						<div class="reviews-text">
+							<p>Все очень классно. Все понравилось. Девочка просто умница, или одним словом молодец</p>
+							<p class="reviews-user-name">Агата</p>
+						</div>
+					</div>
+				</div>
+				<div class="swiper-slide">
+					<div class="reviews-wrapper">
+						<div class="reviews-image"></div>
+						<div class="reviews-text">
+							<p>Все очень классно. Все понравилось. Девочка просто умница, или одним словом молодец</p>
+							<p class="reviews-user-name">Агата</p>
+						</div>
+					</div>
+				</div>
+				<div class="swiper-slide">
+					<div class="reviews-wrapper">
+						<div class="reviews-image"></div>
+						<div class="reviews-text">
+							<p>Все очень классно. Все понравилось. Девочка просто умница, или одним словом молодец</p>
+							<p class="reviews-user-name">Агата</p>
+						</div>
+					</div>
+				</div>
+				<div class="swiper-slide">
+					<div class="reviews-wrapper">
+						<div class="reviews-image"></div>
+						<div class="reviews-text">
+							<p>Все очень классно. Все понравилось. Девочка просто умница, или одним словом молодец</p>
+							<p class="reviews-user-name">Агата</p>
+						</div>
+					</div>
+				</div>
+				<div class="swiper-slide">
+					<div class="reviews-wrapper">
+						<div class="reviews-image"></div>
+						<div class="reviews-text">
+							<p>Все очень классно. Все понравилось. Девочка просто умница, или одним словом молодец</p>
+							<p class="reviews-user-name">Агата</p>
+						</div>
+					</div>
+				</div>
+				<div class="swiper-slide">
+					<div class="reviews-wrapper">
+						<div class="reviews-image"></div>
+						<div class="reviews-text">
+							<p>Все очень классно. Все понравилось. Девочка просто умница, или одним словом молодец</p>
+							<p class="reviews-user-name">Агата</p>
+						</div>
+					</div>
+				</div>
+				<div class="swiper-slide">
+					<div class="reviews-wrapper">
+						<div class="reviews-image"></div>
+						<div class="reviews-text">
+							<p>Все очень классно. Все понравилось. Девочка просто умница, или одним словом молодец</p>
+							<p class="reviews-user-name">Агата</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="swiper-pagination"></div>
+			<div class="swiper-button-next"></div>
+			<div class="swiper-button-prev"></div>
+		</div>
+		<script>
+			var swiper = new Swiper('.mySwiper', {
+				spaceBetween: 30,
+				navigation: {
+					nextEl: '.swiper-button-next',
+					prevEl: '.swiper-button-prev',
+				},
+				pagination: {
+					el: '.swiper-pagination',
+				},
+				mousewhell: true,
+			});
+		</script>
+	</div>
+</div>
+
+<div id="contacts" class="contacts">
+	<div class="contacts-wrapper">
+		<h6>Контакты</h6>
+		<p class="contacts-text">мкр.Мельничный, ул.Трудовых резервов, д.2</p>
+		<p class="contacts-text">Номер телефона: <a href="tel:+79041465797">+7 (904) 146-57-97</a></p>
+		<p class="contacts-text">Время работы: 10:00 — 19:00</p>
+	</div>
+	<div id="wrapMap">
+		<iframe src="https://yandex.ru/map-widget/v1/?um=constructor%3Ade198439c8cc5f1ea782cbfa26aaaf85803cd3d23c0fc2c89b894e90a59e9dfd&amp;source=constructor" width="100%" height="500" frameborder="0"></iframe>
+	</div>
+</div>
+
+<footer>
+	<div class="container">
+		<div style="display: flex;justify-content: space-around;align-items: center;">
+			<ul>
+				<li><a style="text-decoration: none;color: #777e89;" target="_blank" href="{% url 'privacy' %}">Политика конфиденциальности</a></li>
+				<li><a style="text-decoration: none;color: #777e89;" target="_blank" href="{% static 'main_page/images/sertif.png'%}">Сертификат</a></li>
+			</ul>
+			<span>Помощь и вопросы по сайту <b><a style="color: #777e89;" href="mailto:support@polina-nail.ru">support@polina-nail.ru</a></b></span>
+		</div>
+		<div>&copy Все права защищены</div>
+	</div>
+</footer>
+
+<script>
+	document.querySelector('.hamburger-button').addEventListener('click', function() {
+		this.classList.toggle('active');
+		document.querySelector('.navigation').classList.toggle('open');
+	})
+	document.querySelector('.navigation').addEventListener('click', function() {
+		this.classList.toggle('open');
+		document.querySelector('.hamburger-button').classList.toggle('active');
+	})
+</script>
+</body>
+</html>

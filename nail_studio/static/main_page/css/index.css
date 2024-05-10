@@ -1,0 +1,475 @@
+*,*:before, *:after {
+	box-sizing: border-box;
+}
+html:root {
+    --swiper-theme-color: #39B329;
+}
+body {
+	background: #F7F7F7;
+	margin: 0;
+	font-family: "Roboto", sans-serif;
+}
+
+p {
+	font-family: "Roboto", sans-serif;
+	font-weight: 300;
+	color: #383737;
+}
+
+.header {
+	position: sticky;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 100;
+	background: linear-gradient(#39B329, 98%, #f7f7f7);
+
+}
+
+.container {
+	width: 100%;
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+.wrapper-header-link {
+	display: flex;
+	justify-content: space-between;
+	padding: 30px;
+}
+
+.navigation {
+	display: inline-flex;
+	height: 39.5px;
+	align-items: center;
+}
+
+.nav-link {
+	color: #000;
+	margin-right: 30px;
+	padding: 10px 0 10px 0;
+	text-decoration: none;
+	font-size: 16px;
+	font-weight: 500;
+}
+
+.wrapper-icon {
+	display: flex;
+	width: 65px;
+	justify-content: space-between;
+	align-items: center;
+}
+#vk_logo {
+	border-radius: 50%;
+}
+#wapp_logo {
+	border-radius: 50%;
+}
+.hamburger-button {
+	display: none;
+}
+.wrapper-button-make-an-appointment {
+	display: flex;
+	justify-content: space-between;
+	width: 30%;
+}
+
+.button-make-an-appointment {
+    background: #efefef;
+	padding: 10px 30px;
+	border: 0;
+	border-radius: 5px;
+    -webkit-appearance: none;
+
+}
+
+.button-make-an-appointment:hover {
+	cursor: pointer;
+	opacity: 0.9;
+}
+
+.link-make-an-appointment {
+	text-decoration: none;
+}
+
+.intro {
+	height: 80vh;
+
+}
+#main {
+	height: 100%;
+}
+.intro__block {
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+
+h1 {
+	font-size: 96px;
+	font-weight: 100;
+	text-transform: uppercase;
+	text-align: center;
+	color: #000;
+	margin-top: 5vh;
+	margin-bottom: 10vh;
+}
+
+.button-online-req {
+	height: 70px;
+	width: 200px;
+	margin-top: 10vh;
+	cursor: pointer;
+	border: 0;
+	border-radius: 5px;
+	font-size: 16px;
+	color: #000;
+	background: #efefef;
+	-webkit-appearance: none;
+}
+
+.button-online-req:hover {
+	background: #39B329;
+	border: 0;
+}
+.button-online-req:active {
+	background: #39B329;
+	border: 0;
+	opacity: 0.9;
+}
+#about {
+
+}
+.about {
+	display: flex;
+	margin-top: 40px;
+}
+
+h4 {
+	color: #39B329;
+	margin: 0;
+	margin-bottom: 5px;
+	font-size: 48px;
+	font-weight: 400;
+}
+.photos {
+	display: flex;
+	max-height: 400px;
+	max-width: 712px;
+	justify-content: space-around;
+}
+.image-wrapp {
+ 	display: flex;
+ 	width: 100%;
+ 	max-width: 712px;
+ 	flex-wrap: wrap;
+ 	justify-content: center;
+}
+.text-portfolio {
+	margin-top: 30px;
+	margin-bottom: 10px;
+	font-size: 36px;
+	text-align: center;
+}
+.text-portfolio-vk {
+	text-align: center;
+	margin-top: 0;
+}
+.portfolio {
+	background: linear-gradient(#f7f7f7, 15%, #39B329, 75%, #f7f7f7);
+	padding-top: 30px;
+	padding-bottom: 30px;
+	margin-bottom: 150px;
+}
+
+.photo-wrapp {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-around;
+}
+.about-wrapp {
+	padding-right: 15px;
+	padding-left: 10px;
+	width: 463px;
+}
+.about-text {
+	font-size: 18px;
+}
+#services {
+	min-height: 574px;
+	max-height: 2296px;
+}
+.services {
+	min-height: 574px;
+	max-height: 2296px;
+}
+
+h3 {
+	color: #39B329;
+	text-align: center;
+	font-size: 48px;
+	font-weight: 500;
+}
+
+.services-display {
+	min-height: 520px;
+	max-height: 2296px;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-around;
+}
+
+.services-block {
+	margin-bottom: 30px;
+	position: relative;
+	background: #fff;
+	height: 470px;
+	width: 270px;
+}
+
+.services-img {
+
+}
+
+h2 {
+	margin-left: 15px;
+	font-size: 24px;
+	font-weight: 400;
+}
+
+.services-price {
+	margin-top: 17px;
+	margin-left: 15px;
+	font-size: 26px;
+}
+.text-in-service-block {
+	color: #888888;
+	margin: 1px 0 1px 15px;
+	opacity: 0.7;
+}
+.text-in-service-block-120-rub {
+	opacity: 0.7;
+	color: #888888;
+	margin: 60px 0 1px 15px;
+}
+.services-button-wrapper {
+	position: absolute;
+	bottom: 15px;
+	left: 15px;
+	right: 15px;
+}
+
+.services-button {
+    -webkit-appearance: none;
+	width: 240px;
+	height: 50px;
+	border-radius: 5px;
+	border: 1px solid #D4D4D4;
+	color: #39B329;
+	font-size: 16px;
+	cursor: pointer;
+	background: #efefef;
+}
+
+.services-button:hover {
+	opacity: 0.7;
+	background: #d7d7d7;
+}
+.service-on-the-side {
+	margin: auto;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+#on-the-side {
+	height: 200px;
+}
+#price-on-the-side {
+	margin: 10px 0 10px 15px;
+}
+
+h5 {
+	color: #39B329;
+	margin-top: 150px;
+	margin-bottom: 30px;
+	text-align: center;
+	font-size: 36px;
+	font-weight: 400;
+}
+
+.reviews-feedback {
+	margin: auto;
+	margin-bottom: 100px;
+	text-align: center;
+	max-width: 500px;
+}
+
+.reviews-wrapper {
+	margin: auto;
+	display: flex;
+	max-width: 1100px;
+	width: 100%;
+	background: #fff;
+}
+
+.reviews-image {
+
+}
+
+.reviews-text {
+	margin-left: 10px; 
+}
+
+.reviews-user-name {
+	color: #39B329;
+	font-weight: 400;
+}
+
+#contacts {
+	margin: 150px auto 0 auto;
+	max-width: 1200px;
+	position: relative;
+}
+
+#wrapMap {
+	margin: auto;
+	width: 100%;
+	max-width: 1200px;
+}
+
+.contacts-wrapper {
+	position: absolute;
+	background: #39B329;
+	width: 400px;
+	padding: 30px;
+	right: 5px;
+	bottom: -15px;
+}
+
+h6 {
+	margin: 0;
+	margin-bottom: 30px;
+	color: #000;
+	font-weight: 400;
+	font-size: 30px;
+}
+
+.contacts-text {
+	color: #000;
+}
+
+footer {
+	margin-top: 40px;
+	padding-top: 40px;
+	color: #777e89;
+	background: #2b2f32;
+}
+
+@media (max-width: 1190px) {
+    .reviews-wrapper{
+        width: 90%;
+    }
+}
+
+@media (max-width: 800px) {
+    .reviews-wrapper{
+        width: 88%;
+    }
+}
+
+@media (max-width: 660px) {
+    .reviews-wrapper{
+        width: 84%;
+    }
+
+	.navigation {
+		display: none;
+		flex-direction: column;
+		position: fixed;
+		width: 100%;
+		height: 100%;
+		top: 0; bottom: 0; left: 0; right: 0;
+		z-index: 50;
+		overflow-y: auto;
+		padding: 80px 40px 50px 40px;
+		background: linear-gradient(#f7f7f7, 2%, #39B329, 99%, #f7f7f7);
+	}
+	.navigation.open {
+		display: flex;
+	}
+	.nav-link {
+		font-size: 24px;
+		font-weight: 300;
+	}
+	.button-make-an-appointment {display: none;}
+	.hamburger-button {
+		display: flex;
+		position: relative;
+		z-index: 50;
+	    flex-direction: column;
+	  	flex-wrap: wrap;
+	  	justify-content: space-between;
+	  	height: 2.5rem;
+	 	width: 2.5rem;
+	  	cursor: pointer;
+	}
+	.hamburger-button-top,
+	.hamburger-button-middle,
+	.hamburger-button-bottom {
+  		height: 5px;
+  		background: black;
+  		border-radius: 5px;
+  		margin: 3px 0px;
+  		transform-origin: left;
+  		transition: all 0.5s;
+	}
+	.hamburger-button.active .hamburger-button-top {
+  		transform: rotate(45deg);
+	}
+	.hamburger-button.active .hamburger-button-middle {
+ 		opacity: 0;
+	}
+	.hamburger-button.active .hamburger-button-bottom {
+ 		transform: rotate(-45deg);
+	}
+	.wrapper-button-make-an-appointment {
+		width: 100%;
+	}
+	#vk_logo,#wapp_logo{
+		width: 50px;
+		height: 50px;
+	}
+	.about {
+		display: grid;
+
+	}
+	.contacts-wrapper {
+		position: relative;
+		right: 0; bottom: 0;
+		width: 100%;
+	}
+}
+@media (max-width: 540px) {
+	h1 {
+		font-size: 64px;
+	}
+	.about-wrapp {
+		width: 100%;
+	}
+}
+
+@media (max-width: 490px) {
+    .reviews-wrapper{
+        width: 80%;
+    }
+}
+
+@media (max-width: 390px) {
+    .reviews-wrapper{
+        width: 76%;
+    }
+}
+
