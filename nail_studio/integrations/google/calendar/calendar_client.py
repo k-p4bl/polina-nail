@@ -1,6 +1,7 @@
 import datetime
 import os
 from pprint import pprint
+from dotenv import load_dotenv, find_dotenv
 
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
@@ -8,10 +9,27 @@ from googleapiclient.discovery import build
 
 class GoogleCalendar:
     SCOPES = ["https://www.googleapis.com/auth/calendar"]
+    # For develop ____________________________________________
+    load_dotenv(find_dotenv())
+    # ________________________________________________________
+
+    info = {
+        "type": "service_account",
+        "project_id": "nail-421623",
+        "private_key_id": os.getenv('GOOGLE_CALENDAR_PRIVATE_KEY_ID'),
+        "private_key": os.getenv('GOOGLE_CALENDAR_PRIVATE_KEY').replace('\\n', '\n'),
+        "client_email": "polina@nail-421623.iam.gserviceaccount.com",
+        "client_id": "103713274168080944607",
+        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+        "token_uri": "https://oauth2.googleapis.com/token",
+        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+        "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/polina%40nail-421623.iam.gserviceaccount.com",
+        "universe_domain": "googleapis.com"
+    }
 
     def __init__(self):
-        credentials = service_account.Credentials.from_service_account_file(
-            filename='nail-421623-69d9cb7e3d74.json', scopes=self.SCOPES
+        credentials = service_account.Credentials.from_service_account_info(
+            info=self.info, scopes=self.SCOPES
         )
         self.service = build('calendar', 'v3', credentials=credentials)
 
