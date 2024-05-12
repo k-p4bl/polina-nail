@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
 from integrations.google.calendar.calendar_client import GoogleCalendar
+from integrations.yookassa.payments import YandexPayment
 from main_page import models
 from django.views.decorators.csrf import csrf_exempt
 
@@ -33,7 +34,7 @@ def sign_up(request, service=None):
                                                            service=form.cleaned_data['service']
                                                            )
 
-            return redirect('sign_up_finish', person_name.pk, permanent=True)
+            return redirect('step_for_payment', person_name.pk, permanent=True)
     else:
         form = SignUpForm(error_class=SignUpErrorList)
 
@@ -47,7 +48,16 @@ def sign_up(request, service=None):
 
 
 def sign_up_finish(request, pk):
-    return render(request, 'sign_up/record_finish.html', {'pk': pk})
+    person_name = models.PersonName.objects.get(pk=pk)
+    date = person_name.date.date.strftime('%d.%m')
+    time = person_name.time.time.strftime('%H:%M')
+    context = {
+        'pk': pk,
+        'date': date,
+        'time': time,
+        'name': person_name.first_name
+    }
+    return render(request, 'sign_up/record_finish.html', context)
 
 
 @csrf_exempt
@@ -68,3 +78,22 @@ def create_calendar_event(request):
     calendar.add_event(date=date, time=time, service=service_for_calendar, description=description, hour=h, minute=m)
 
     return JsonResponse({'success': True})
+
+
+def payments(request, pk):
+
+    service_in_sign_up = models.PersonName.objects.get(pk=pk).service
+    prepayment = models.ServiceForHtml.objects.get(service=service_in_sign_up.service).prepayment
+
+    payment = YandexPayment()
+    payment_response = payment.create_payment(prepayment, service_in_sign_up.service)
+
+    context = {
+        'pk': pk,
+        'confirmation_token': payment_response.confirmation.confirmation_token
+    }
+    return render(request, 'sign_up/payment.html', context)
+
+
+def step_for_payment(request, pk):
+    return render(request, 'sign_up/step_for_payment.html', {'pk': pk})

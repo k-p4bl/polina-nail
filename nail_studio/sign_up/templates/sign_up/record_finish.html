@@ -11,9 +11,8 @@
 <body>
 <div class="placeholder">
     <p class="text">
-        Вы успешно записаны.<br>
+        {{ name }}, вы успешно записаны на {{ date }}, на время {{ time }}.<br>
         По вопросам записи <a href="tel:+79041465797">+7_(904)_146-57-97</a><br>
-        По поводу предоплаты с вами свяжутся в мессенджере WhatsApp
     </p>
     <a href="{% url 'main_page' %}" class="link-main">Вернутся на главную</a>
 </div>
