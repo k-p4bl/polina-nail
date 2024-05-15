@@ -1,6 +1,6 @@
 import json
 
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 
 from integrations.google.calendar.calendar_client import GoogleCalendar
@@ -47,6 +47,25 @@ def sign_up(request, service=None):
     return render(request, 'sign_up/record.html', context)
 
 
+def payments(request, pk):
+
+    person = models.PersonName.objects.get(pk=pk)
+    prepayment = models.ServiceForHtml.objects.get(service=person.service.service).prepayment
+
+    payment = YandexPayment()
+    payment_response = payment.create_payment(prepayment, person.service.service, person.phone_number)
+
+    context = {
+        'pk': pk,
+        'confirmation_token': payment_response.confirmation.confirmation_token
+    }
+    return render(request, 'sign_up/payment.html', context)
+
+
+def step_for_payment(request, pk):
+    return render(request, 'sign_up/step_for_payment.html', {'pk': pk})
+
+
 def sign_up_finish(request, pk):
     person_name = models.PersonName.objects.get(pk=pk)
     date = person_name.date.date.strftime('%d.%m')
@@ -77,23 +96,12 @@ def create_calendar_event(request):
 
     calendar.add_event(date=date, time=time, service=service_for_calendar, description=description, hour=h, minute=m)
 
-    return JsonResponse({'success': True})
+    return HttpResponse(status=200)
 
 
-def payments(request, pk):
+def sign_up_error(request, pk):
+    person = models.PersonName.objects.get(pk=pk)
+    person.time.date_set.remove(person.date)
+    person.delete()
 
-    service_in_sign_up = models.PersonName.objects.get(pk=pk).service
-    prepayment = models.ServiceForHtml.objects.get(service=service_in_sign_up.service).prepayment
-
-    payment = YandexPayment()
-    payment_response = payment.create_payment(prepayment, service_in_sign_up.service)
-
-    context = {
-        'pk': pk,
-        'confirmation_token': payment_response.confirmation.confirmation_token
-    }
-    return render(request, 'sign_up/payment.html', context)
-
-
-def step_for_payment(request, pk):
-    return render(request, 'sign_up/step_for_payment.html', {'pk': pk})
+    return render(request, 'sign_up/error.html')

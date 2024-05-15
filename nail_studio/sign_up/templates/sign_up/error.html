@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ошибка записи</title>
+
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'sign_up/css/record_finish.css' %}">
+</head>
+<body>
+<div class="placeholder">
+    <p class="text">
+        Ошибка записи. Попробуйте еще раз<br>
+    </p>
+    <a href="{% url 'main_page' %}" class="link-main">Вернутся на главную</a>
+</div>
+</body>
+</html>

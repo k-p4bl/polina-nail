@@ -9,7 +9,7 @@ class YandexPayment:
         Configuration.secret_key = os.getenv('YOOKASSA_TEST_SECRET_KEY')
         self.idempotence_key = str(uuid.uuid4())
 
-    def create_payment(self, price: str, service: str):
+    def create_payment(self, price: str, service: str, phone_number: str):
         payment = Payment.create({
             "amount": {
                 "value": price,
@@ -19,6 +19,7 @@ class YandexPayment:
                 "type": "embedded"
             },
             "capture": True,
-            "description": service
+            "description": service,
+            "merchant_customer_id": phone_number
         }, self.idempotence_key)
         return payment

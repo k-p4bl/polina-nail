@@ -7,29 +7,34 @@
   <!--Подключение библиотеки для инициализации виджета ЮKassa-->
   <script src="https://yookassa.ru/checkout-widget/v1/checkout-widget.js"></script>
  </head>
- <body>
+ <body style="
+    display: flex;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: space-around;" >
   <!--Контейнер, в котором будет отображаться платежная форма-->
-  <div id="payment-form"></div>
+  <div id="payment-form" style="
+    width: 50vw;" ></div>
 
 <!-- TODO Убрать подсказки-->
-  Данные банковской карты для оплаты в <b>тестовом магазине</b>:
+<!--  Данные банковской карты для оплаты в <b>тестовом магазине</b>:-->
 
-   - номер — <b>5555 5555 5555 4477</b>
-   - срок действия — <b>01/30</b> (или другая дата, больше текущей)
-   - CVC — <b>123</b> (или три любые цифры)
-   - код для прохождения 3-D Secure — <b>123</b> (или три любые цифры)
+<!--   - номер — <b>5555 5555 5555 4477</b>-->
+<!--   - срок действия — <b>01/30</b> (или другая дата, больше текущей)-->
+<!--   - CVC — <b>123</b> (или три любые цифры)-->
+<!--   - код для прохождения 3-D Secure — <b>123</b> (или три любые цифры)-->
 
-  <a href=https://yookassa.ru/developers/payment-acceptance/testing-and-going-live/testing#test-bank-card>Другие тестовые банковские карты</a>
+<!--  <a href=https://yookassa.ru/developers/payment-acceptance/testing-and-going-live/testing#test-bank-card>Другие тестовые банковские карты</a>-->
 
 <!--TODO Изменить url в скрипте -->
   <script>
   //Инициализация виджета. Все параметры обязательные.
   const checkout = new window.YooMoneyCheckoutWidget({
       confirmation_token: "{{ confirmation_token }}", //Токен, который перед проведением оплаты нужно получить от ЮKassa
-      return_url: 'http://127.0.0.1:8000{% url 'sign_up_finish' pk %}', //Ссылка на страницу завершения оплаты, это может быть любая ваша страница
+<!--      return_url: 'http://127.0.0.1:8443{% url 'sign_up_finish' pk %}', //Ссылка на страницу завершения оплаты, это может быть любая ваша страница-->
 
       //При необходимости можно изменить цвета виджета, подробные настройки см. в документации
-       //customization: {
+       customization: {
         //Настройка цветовой схемы, минимум один параметр, значения цветов в HEX
         //colors: {
             //Цвет акцентных элементов: кнопка Заплатить, выбранные переключатели, опции и текстовые поля
@@ -38,11 +43,28 @@
             //Цвет платежной формы и ее элементов
             //background: '#F2F3F5' //Значение цвета в HEX
         //}
-      //},
+
+<!--        payment_methods: ['bank_card', 'sberbank', 'sbp']-->
+
+      },
       error_callback: function(error) {
           console.log(error)
       }
   });
+
+  checkout.on('success', () => {
+          //Код, который нужно выполнить после успешной оплаты.
+          window.location.href = '{% url 'sign_up_finish' pk %}';
+          //Удаление инициализированного виджета
+          checkout.destroy();
+      });
+
+  checkout.on('fail', () => {
+          //Код, который нужно выполнить после неудачной оплаты.
+          window.location.href = '{% url 'sign_up_error' pk %}';
+          //Удаление инициализированного виджета
+          checkout.destroy();
+      });
 
   //Отображение платежной формы в контейнере
   checkout.render('payment-form');
