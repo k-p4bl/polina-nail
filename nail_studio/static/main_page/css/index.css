@@ -451,6 +451,11 @@ footer {
 		right: 0; bottom: 0;
 		width: 100%;
 	}
+    .footer-info {
+        flex-direction: column;
+        width: 80vw;
+        margin: auto;
+    }
 }
 @media (max-width: 540px) {
 	h1 {

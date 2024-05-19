@@ -45,6 +45,8 @@ class GoogleCalendar:
     def add_event(self, date, time, service='Тест', description='Тест', hour=0, minute=30):
         time_end = datetime.time(hour=time.hour + hour, minute=time.minute + minute)
 
+        minutes_for_reminders = (24 - (20 - int(time.strftime('%H')))) * 60
+
         event = {
             'summary': '(Маникюр)' + service,
             'description': description,
@@ -55,6 +57,22 @@ class GoogleCalendar:
             'end': {
                 'dateTime': date + 'T' + time_end.strftime('%H:%M:%S'),
                 'timeZone': 'Asia/Irkutsk',
+            },
+            # 'attendees': [
+            #     {'email': 'd.pauline.w@gmail.com'},
+            # ],
+            "reminders": {
+                "useDefault": False,
+                "overrides": [
+                    {
+                        "method": 'popup',
+                        "minutes": minutes_for_reminders
+                    },
+                    {
+                        "method": 'email',
+                        "minutes": minutes_for_reminders
+                    }
+                ]
             },
         }
 

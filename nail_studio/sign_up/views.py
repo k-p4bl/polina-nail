@@ -24,14 +24,16 @@ def sign_up(request, service=None):
     if request.method == 'POST':
         form = SignUpForm(request.POST, error_class=SignUpErrorList)
         if form.is_valid():
-            form.cleaned_data['time'].date_set.add(form.cleaned_data['date'][0])
-            person_name = models.PersonName.objects.create(last_name=form.cleaned_data['person_name'][0],
-                                                           first_name=form.cleaned_data['person_name'][1],
-                                                           patronymic=form.cleaned_data['person_name'][2],
-                                                           phone_number=form.cleaned_data['phone_number'],
-                                                           date=form.cleaned_data['date'][0],
-                                                           time=form.cleaned_data['time'],
-                                                           service=form.cleaned_data['service']
+            cd = form.cleaned_data
+
+            cd['time'].date_set.add(cd['date'][0])
+            person_name = models.PersonName.objects.create(last_name=cd['person_name'][0],
+                                                           first_name=cd['person_name'][1],
+                                                           patronymic=cd['person_name'][2],
+                                                           phone_number=cd['phone_number'],
+                                                           date=cd['date'][0],
+                                                           time=cd['time'],
+                                                           service=cd['service']
                                                            )
 
             return redirect('step_for_payment', person_name.pk, permanent=True)
