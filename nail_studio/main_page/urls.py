@@ -8,7 +8,6 @@ from . import views
 urlpatterns = [
     path('', views.index, name='main_page'),
     path('privacy/', views.privacy, name='privacy'),
-    path('validate_date/', views.validate_date, name='validate_date'),
 ]
 
 

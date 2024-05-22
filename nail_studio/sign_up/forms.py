@@ -4,8 +4,8 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.forms.utils import ErrorList
 
-from main_page import models
-from main_page.models import ServiceForHtml, Time
+from .models import PersonDataAndDate, Service, Time
+from main_page.models import ServiceForHtml
 
 
 class SignUpErrorList(ErrorList):
@@ -15,12 +15,7 @@ class SignUpErrorList(ErrorList):
 
 class ServiceChoiceField(forms.ModelChoiceField):
     def to_python(self, value):
-        return models.Service.objects.get_or_create(service=value)[0]
-
-
-class DateModelField(forms.DateField):
-    def to_python(self, value):
-        return models.Date.objects.get_or_create(date=value)
+        return Service.objects.get_or_create(service=value)[0]
 
 
 class SignUpForm(forms.Form):
@@ -42,10 +37,10 @@ class SignUpForm(forms.Form):
                                        'data-tel-input': True
                                    }))
 
-    date = DateModelField(widget=forms.DateInput(attrs={'type': "date",
-                                                        'name': "date",
-                                                        'id': "date"
-                                                        }))
+    date = forms.DateField(widget=forms.DateInput(attrs={'type': "date",
+                                                         'name': "date",
+                                                         'id': "date"
+                                                         }))
 
     time = forms.ModelChoiceField(queryset=Time.objects.all(),
                                   widget=forms.RadioSelect(attrs={
@@ -62,9 +57,31 @@ class SignUpForm(forms.Form):
         return name_split
 
     def clean_time(self):
-        date = self.cleaned_data['date'][0]
+        p = PersonDataAndDate.objects.filter(date=self.cleaned_data['date'])
+        lst = []
+        for i in p:
+            lst.append(i.time)
         time = self.cleaned_data['time']
-        if time in date.time.all():
+        if time in lst:
             raise ValidationError('К сожалению это время уже занято')
         return time
+
+
+class SignUpAdminForm(forms.ModelForm):
+    class Meta:
+        model = PersonDataAndDate
+        fields = ['service', 'last_name', 'first_name', 'patronymic', 'phone_number', 'date', 'time']
+
+    def clean_time(self):
+        persons_qs = PersonDataAndDate.objects.filter(date=self.cleaned_data['date'])
+        busy_time_lst = []
+        for person in persons_qs:
+            if self.initial:
+                if person.time.pk == self.initial['time']:
+                    continue
+            busy_time_lst.append(person.time)
+        new_time = self.cleaned_data['time']
+        if new_time in busy_time_lst:
+            raise ValidationError('К сожалению это время уже занято')
+        return new_time
 

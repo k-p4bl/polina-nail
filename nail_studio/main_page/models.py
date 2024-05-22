@@ -2,6 +2,8 @@ from django.db import models
 from django.utils import timezone
 
 
+# TODO delete
+# ______________________________________________________________________________________________________________________
 class DisabledDatesManager(models.Manager):
     def get_disabled_dates(self):
         list_of_date = []
@@ -25,6 +27,7 @@ class DisabledDates(models.Model):
         ordering = ['start_date']
         verbose_name = 'Диапазон недоступных дат'
         verbose_name_plural = 'Диапазоны недоступных дат'
+# ______________________________________________________________________________________________________________________
 
 
 class ServiceForHtml(models.Model):
@@ -65,6 +68,8 @@ class AdditionalServiceForHtml(models.Model):
         verbose_name_plural = 'Доп. услуги, отображаемые на сайте'
 
 
+# TODO delete
+# ______________________________________________________________________________________________________________________
 class Time(models.Model):
     objects = models.Manager()
     time = models.TimeField(unique=True, verbose_name='Время')
@@ -137,3 +142,5 @@ class PersonName(models.Model):
         ordering = ['date', 'time']
         verbose_name = 'Запись'
         verbose_name_plural = 'Записи'
+
+# ______________________________________________________________________________________________________________________

@@ -17,10 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from main_page.views import bad_request
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('main_page.urls')),
     path('sign_up/', include('sign_up.urls')),
     path('users/', include('users.urls', namespace='users')),
-    path('editor/', include('sign_up_app.urls')),
 ]
+
+handler400 = bad_request

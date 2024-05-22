@@ -180,6 +180,13 @@
 
         <div class="submit-wrap">
             <button type="submit" id="submit">Записаться</button>
+            <script>
+                var forms = document.querySelector('form');
+                forms.addEventListener('submit', function(){
+                    var btn = this.querySelector("input[type=submit], button[type=submit]");
+                    btn.disabled = true;
+                });
+            </script>
         </div>
         <p class="privacy-text">Нажимая "Записаться" вы соглашаетесь с <a style="color: black;" target="_blank" href="{% url 'privacy' %}">политикой конфиденциальности</a></p>
         <style>

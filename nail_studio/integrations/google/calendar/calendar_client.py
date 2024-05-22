@@ -1,10 +1,69 @@
 import datetime
 import os
 from pprint import pprint
+
+from django.core.exceptions import BadRequest
 from dotenv import load_dotenv, find_dotenv
 
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
+
+
+class GoogleCalendarEvent:
+    def __init__(self, service, event_id: str):
+        self.calendar_id = 'd.pauline.w@gmail.com'
+        self.service = service
+        self.event_id = event_id
+        self.event = self.service.events().get(calendarId=self.calendar_id, eventId=event_id).execute()
+
+    def change(self,
+               date: datetime.date | None,
+               time: datetime.time | None,
+               service: str | None,
+               description: str | None,
+               hour: int | None,
+               minute: int | None):
+        initial_end_date, initial_end_time = self.event['end']['dateTime'].split('T')
+        initial_start_date, initial_start_time = self.event['start']['dateTime'].split('T')
+        # Если изменилась услуга
+        if service is not None and hour is not None and minute is not None:
+            self.event['summary'] = '(Маникюр)' + service
+
+            # дата(НЕ изменилась) время(НЕ изменилось), меняется время(конца)
+            if time is None and date is None:
+                time = datetime.time(int(initial_start_time[:2]))
+                time_end = datetime.time(hour=time.hour + hour, minute=time.minute + minute).strftime('%H:%M')
+                self.event['end']['dateTime'] = initial_end_date + 'T' + time_end + initial_end_time[5:]
+        else:
+            hour = int(initial_end_time[:2]) - int(initial_start_time[:2])
+            minute = int(initial_end_time[3:5]) - int(initial_start_time[3:5])
+
+        # время ИЗМЕНИЛОСЬ, меняется время(конца и начала)
+        if time is not None:
+            # дата НЕ изменилась
+            # или дата ИЗМЕНИЛАСЬ, меняется дата(конца и начала)
+            date = initial_start_date if date is None else date.strftime('%Y-%m-%d')
+            self.event['start']['dateTime'] = (date + 'T' + time.strftime('%H:%M') +
+                                               initial_start_time[5:])
+
+            time_end = datetime.time(hour=time.hour + hour, minute=time.minute + minute).strftime('%H:%M')
+            self.event['end']['dateTime'] = date + 'T' + time_end + initial_end_time[5:]
+
+        # дата ИЗМЕНИЛАСЬ время НЕ изменилось, меняется дата(конца и начала)
+        elif date is not None:
+            self.event['start']['dateTime'] = date.strftime('%Y-%m-%d') + 'T' + initial_start_time
+
+            time = datetime.time(int(initial_start_time[:2]))
+            time_end = datetime.time(hour=time.hour + hour, minute=time.minute + minute).strftime('%H:%M')
+            self.event['end']['dateTime'] = date.strftime('%Y-%m-%d') + 'T' + time_end + initial_end_time[5:]
+
+        if description is not None:
+            self.event['description'] = description
+
+        self.service.events().update(calendarId=self.calendar_id, eventId=self.event_id, body=self.event).execute()
+
+    def delete(self):
+        self.service.events().delete(calendarId=self.calendar_id, eventId=self.event_id).execute()
 
 
 class GoogleCalendar:
@@ -32,6 +91,7 @@ class GoogleCalendar:
             info=self.info, scopes=self.SCOPES
         )
         self.service = build('calendar', 'v3', credentials=credentials)
+        self.calendar_id = 'd.pauline.w@gmail.com'
 
     def get_calendar_list(self):
         return self.service.calendarList().list().execute()
@@ -42,12 +102,31 @@ class GoogleCalendar:
             body=calendar_list_entry
         ).execute()
 
+    def _get_event_id(self, description: str, start_date: datetime.date, start_time: datetime.time) -> str:
+        date_time = start_date.strftime('%Y-%m-%d') + 'T' + start_time.strftime('%H:%M:%S') + '+08:00'
+
+        events_list = self.service.events().list(calendarId=self.calendar_id, q=description).execute()['items']
+        if events_list:
+            for event in events_list:
+                if event['start']['dateTime'] == date_time:
+                    return event['id']
+
+        raise BadRequest(f'Не существует события в календаре с описанием "{description}", датой "{start_date}"'
+                         f' и временем "{start_time}"')
+
+    def get_event(self,
+                  description: str,
+                  start_date: datetime.date,
+                  start_time: datetime.time) -> GoogleCalendarEvent:
+        event_id = self._get_event_id(description, start_date, start_time)
+        return GoogleCalendarEvent(self.service, event_id)
+
     def add_event(self, date, time, service='Тест', description='Тест', hour=0, minute=30):
         time_end = datetime.time(hour=time.hour + hour, minute=time.minute + minute)
 
         minutes_for_reminders = (24 - (20 - int(time.strftime('%H')))) * 60
 
-        event = {
+        body = {
             'summary': '(Маникюр)' + service,
             'description': description,
             'start': {
@@ -58,9 +137,6 @@ class GoogleCalendar:
                 'dateTime': date + 'T' + time_end.strftime('%H:%M:%S'),
                 'timeZone': 'Asia/Irkutsk',
             },
-            # 'attendees': [
-            #     {'email': 'd.pauline.w@gmail.com'},
-            # ],
             "reminders": {
                 "useDefault": False,
                 "overrides": [
@@ -76,7 +152,7 @@ class GoogleCalendar:
             },
         }
 
-        self.service.events().insert(calendarId='d.pauline.w@gmail.com', body=event).execute()
+        self.service.events().insert(calendarId=self.calendar_id, body=body).execute()
 
 
 if __name__ == '__main__':

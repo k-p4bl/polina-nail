@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'main_page.apps.MainPageConfig',
     'sign_up.apps.SignUpConfig',
-    'sign_up_app.apps.SignUpAppConfig',
     'users.apps.UsersConfig',
 ]
 
@@ -107,7 +106,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'ru-RU'
+LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'Asia/Irkutsk'
 
