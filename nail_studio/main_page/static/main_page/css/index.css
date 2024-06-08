@@ -52,8 +52,19 @@ p {
 	font-size: 16px;
 	font-weight: 500;
 }
+.wrapper-logo {
+	margin-right: 10px;
+	display: inline-flex;
+	height: 40px;
+	align-items: center;
+}
+.site_logo {
+	background-color: #1da23f;
+	border-radius: 40%;
+}
 
 .wrapper-icon {
+	margin-right: 10px;
 	display: flex;
 	width: 65px;
 	justify-content: space-between;
@@ -71,7 +82,8 @@ p {
 .wrapper-button-make-an-appointment {
 	display: flex;
 	justify-content: space-between;
-	width: 30%;
+	align-items: center;
+	min-width: 30%;
 }
 
 .button-make-an-appointment {
@@ -435,9 +447,13 @@ footer {
 	.hamburger-button.active .hamburger-button-bottom {
  		transform: rotate(-45deg);
 	}
-	.wrapper-button-make-an-appointment {
-		width: 100%;
+	/*.wrapper-button-make-an-appointment {*/
+	/*	width: 50%;*/
+	/*}*/
+	.wrapper-icon{
+		width: 110px;
 	}
+
 	#vk_logo,#wapp_logo{
 		width: 50px;
 		height: 50px;

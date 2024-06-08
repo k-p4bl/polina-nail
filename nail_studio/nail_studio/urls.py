@@ -16,6 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.templatetags.static import static
+from django.views.generic.base import RedirectView
 
 from main_page.views import bad_request
 
@@ -24,6 +26,7 @@ urlpatterns = [
     path('', include('main_page.urls')),
     path('sign_up/', include('sign_up.urls')),
     path('users/', include('users.urls', namespace='users')),
+    path('favicon.ico', RedirectView.as_view(url=static('favicons/favicon.ico'))),
 ]
 
 handler400 = bad_request

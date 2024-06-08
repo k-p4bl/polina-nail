@@ -16,7 +16,15 @@
 	<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
 	{% load static %}
-	<link rel="icon" href="{% static 'main_page/images/icon.ico' %}" type="image/x-icon">
+	<link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicons/apple-touch-icon.png' %}">
+	<link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicons/favicon-32x32.png' %}">
+	<link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicons/favicon-16x16.png' %}">
+<!--	<link rel="shortcut icon" type="image/png" href="{% static 'favicons/favicon.ico' %}"/>-->
+	<link rel="manifest" href="{% static 'favicons/site.webmanifest' %}">
+	<link rel="mask-icon" href="{% static 'favicons/safari-pinned-tab.svg' %}" color="#39b329">
+	<meta name="msapplication-TileColor" content="#39b329">
+	<meta name="theme-color" content="#39b329">
+
 	<link rel="stylesheet" type="text/css" href="{% static 'main_page/css/index.css' %}">
 </head>
 <body>
@@ -24,8 +32,11 @@
 <header class="header">
 	<div class="container">
 		<div class="wrapper-header-link">
+			<div class="wrapper-logo">
+				<a href="{% url 'main_page' %}"><img class="site_logo" src="{% static 'main_page/images/logo.png' %}" width="80" height="80"></a>
+			</div>
+
 			<nav class="navigation">
-				<a class="nav-link" href="#main">Главная</a>
 				<a class="nav-link" href="#about">О себе</a>
 				<a class="nav-link" href="#services">Прайс-лист</a>
 				<a class="nav-link" href="#reviews">Отзывы</a>
