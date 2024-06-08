@@ -38,6 +38,8 @@ class PersonDataAndDate(models.Model):
     date = models.DateField(verbose_name='Дата')
     time = models.ForeignKey(to=Time, on_delete=models.PROTECT, verbose_name='Время')
     service = models.ForeignKey(to=Service, on_delete=models.PROTECT, verbose_name='Услуга')
+    payment_id = models.CharField(max_length=255, verbose_name='id платежа предоплаты', null=True, blank=True,
+                                  editable=False)
 
     def __str__(self):
         return self.last_name

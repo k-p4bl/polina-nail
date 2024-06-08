@@ -1,6 +1,7 @@
 import datetime
 import json
 
+from django.contrib.auth.models import User
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 
@@ -88,8 +89,11 @@ def payments(request, pk):
     prepayment = ServiceForHtml.objects.get(service=person.service.service).prepayment
 
     payment = YandexPayment()
-    payment_response = payment.create_payment(prepayment, person.service.service, person.phone_number)
+    payment_response = payment.create_payment(prepayment, person.service.service, person.phone_number,
+                                              person.first_name, request.user.is_authenticated, request.user.pk)
 
+    person.payment_id = payment_response.id
+    person.save()
     context = {
         'pk': pk,
         'confirmation_token': payment_response.confirmation.confirmation_token
@@ -131,7 +135,5 @@ def create_calendar_event(request):
 
 
 def sign_up_error(request, pk):
-    person = models.PersonDataAndDate.objects.get(pk=pk)
-    person.delete()
-
+    models.PersonDataAndDate.objects.get(pk=pk).delete()
     return render(request, 'sign_up/error.html')

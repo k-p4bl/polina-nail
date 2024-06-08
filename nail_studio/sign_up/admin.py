@@ -1,6 +1,8 @@
 from django.contrib import admin
+from django.utils.timezone import localtime, localdate
 
 from integrations.google.calendar.calendar_client import GoogleCalendar
+from integrations.yookassa.payments import YandexPayment
 from main_page.models import ServiceForHtml
 from .forms import SignUpAdminForm
 from .models import PersonDataAndDate, DisabledDates, Service, Time
@@ -11,6 +13,7 @@ class PersonDataAdmin(admin.ModelAdmin):
     form = SignUpAdminForm
     list_display = ['last_name', 'phone_number', 'date', 'time', 'service']
     search_fields = ['last_name', 'phone_number']
+    readonly_fields = ['payment_id']
 
     def save_model(self, request, obj, form, change):
         cd = form.cleaned_data
@@ -70,7 +73,13 @@ class PersonDataAdmin(admin.ModelAdmin):
                                minute=m)
         super().save_model(request, obj, form, change)
 
-    def delete_model(self, request, obj):
+    def delete_model(self, request, obj: PersonDataAndDate):
+        if obj.payment_id:
+            delta = obj.date - localdate()
+            if delta.days >= 3:
+                payment = YandexPayment()
+                payment.refund_payment(obj.payment_id)
+
         calendar = GoogleCalendar()
 
         try:
