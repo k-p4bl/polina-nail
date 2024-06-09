@@ -40,7 +40,7 @@ class YandexPayment:
         if refund_response["status"] == "canceled":
             if refund_response['cancellation_details']['reason'] == 'insufficient_funds':
                 raise BadRequest(
-                    f'Инициатор ошибки: "{refund_response['cancellation_details']['party']}"<br>'
+                    f"Инициатор ошибки: {refund_response['cancellation_details']['party']}<br>"
                     f'Ошибка: "insufficient_funds"<br>'
                     f'Не хватает денег, чтобы сделать возврат: сумма платежей, которые вы получили в день '
                     f'возврата, меньше, чем сам возврат, или есть задолженность.<br>Пополните баланс '
@@ -49,7 +49,7 @@ class YandexPayment:
                 )
             if refund_response['cancellation_details']['reason'] == 'rejected_by_payee':
                 raise BadRequest(
-                    f'Инициатор ошибки: "{refund_response['cancellation_details']['party']}"<br>'
+                    f"Инициатор ошибки: {refund_response['cancellation_details']['party']}<br>"
                     f'Ошибка: "rejected_by_payee"<br>'
                     f'Эмитент платежного средства или другой участник процесса возврата отклонил операцию '
                     f'по неизвестным причинам. Сделать возврат через ЮKassa нельзя. Предложите пользователю '
@@ -61,7 +61,7 @@ class YandexPayment:
                 )
             if refund_response['cancellation_details']['reason'] == 'rejected_by_timeout':
                 raise BadRequest(
-                    f'Инициатор ошибки: "{refund_response['cancellation_details']['party']}"<br>'
+                    f"Инициатор ошибки: {refund_response['cancellation_details']['party']}<br>"
                     f'Ошибка: "rejected_by_timeout"<br>'
                     f'Технические неполадки на стороне инициатора отмены возврата. Повторите запрос. Если результат не '
                     f'изменится, повторяйте запрос с возрастающим разумным интервалом (например, можно использовать '
@@ -70,7 +70,7 @@ class YandexPayment:
                 )
             if refund_response['cancellation_details']['reason'] == 'yoo_money_account_closed':
                 raise BadRequest(
-                    f'Инициатор ошибки: "{refund_response['cancellation_details']['party']}"<br>'
+                    f"Инициатор ошибки: {refund_response['cancellation_details']['party']}<br>"
                     f'Ошибка: "yoo_money_account_closed"<br>'
                     f'Пользователь закрыл кошелек ЮMoney, на который вы пытаетесь вернуть платеж. Сделать возврат через '
                     f'ЮKassa нельзя. Договоритесь с пользователем напрямую, каким способом вы вернете ему деньги. '
@@ -78,7 +78,7 @@ class YandexPayment:
                 )
             if refund_response['cancellation_details']['reason'] == 'general_decline':
                 raise BadRequest(
-                    f'Инициатор ошибки: "{refund_response['cancellation_details']['party']}"<br>'
+                    f"Инициатор ошибки: {refund_response['cancellation_details']['party']}<br>"
                     f'Ошибка: "general_decline"<br>'
                     f'Причина не детализирована. Для уточнения подробностей обратитесь в техническую поддержку.'
                 )
