@@ -26,7 +26,7 @@ urlpatterns = [
     path('', include('main_page.urls')),
     path('sign_up/', include('sign_up.urls')),
     path('users/', include('users.urls', namespace='users')),
-    path('favicon.ico', RedirectView.as_view(url=static('favicons/favicon.ico'))),
+    path('favicon.ico', RedirectView.as_view(url='static/favicons/favicon.ico')),
 ]
 
 handler400 = bad_request
