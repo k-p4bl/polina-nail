@@ -41,7 +41,7 @@ def sign_up(request, service=None):
 
             prepayment = ServiceForHtml.objects.get(service=data['service'].service).prepayment
 
-            person_name = f'{data['last_name']} {data['first_name']} {data['patronymic']}'
+            person_name = f"{data['last_name']} {data['first_name']} {data['patronymic']}"
 
             payment = YandexPayment()
             payment_response = payment.create_payment(prepayment, data['service'].service, data['phone_number'],
