@@ -27,28 +27,68 @@ def sign_up(request, service=None):
         if form.is_valid():
             cd = form.cleaned_data
 
-            person_name = models.PersonDataAndDate.objects.create(last_name=cd['person_name'][0],
-                                                                  first_name=cd['person_name'][1],
-                                                                  patronymic=cd['person_name'][2],
-                                                                  phone_number=cd['phone_number'],
-                                                                  date=cd['date'],
-                                                                  time=cd['time'],
-                                                                  service=cd['service']
-                                                                  )
-            if models.PersonDataAndDate.objects.filter(date=cd['date']).count() >= models.Time.objects.count():
-                models.DisabledDates.objects.create(start_date=cd['date'], creator_is_human=False)
+            data = {
+                'last_name': cd['person_name'][0],
+                'first_name': cd['person_name'][1],
+                'patronymic': cd['person_name'][2],
+                'phone_number': cd['phone_number'],
+                'year': cd['date'].strftime("%Y"),
+                'month': cd['date'].strftime("%m"),
+                'day': cd['date'].strftime("%d"),
+                'time': cd['time'].pk,
+                'service': cd['service']
+            }
 
-            return redirect('payment', person_name.pk, permanent=True)
+            prepayment = ServiceForHtml.objects.get(service=data['service'].service).prepayment
+
+            person_name = f'{data['last_name']} {data['first_name']} {data['patronymic']}'
+
+            payment = YandexPayment()
+            payment_response = payment.create_payment(prepayment, data['service'].service, data['phone_number'],
+                                                      person_name, request.user.is_authenticated, request.user.pk)
+
+            data['payment_id'] = payment_response.id
+            confirmation_token = payment_response.confirmation.confirmation_token
+
+        else:
+            data = None
+            confirmation_token = None
+
     else:
         form = SignUpForm(error_class=SignUpErrorList)
+        data = None
+        confirmation_token = None
 
-    context = {'dates': list_of_date,
-               'service': service,
-               'form': form,
-               'ServiceForHtml': service_html
-               }
+    context = {
+        'dates': list_of_date,
+        'service': service,
+        'form': form,
+        'ServiceForHtml': service_html,
+        'data': data,
+        'confirmation_token': confirmation_token
+    }
 
     return render(request, 'sign_up/record.html', context)
+
+
+@csrf_exempt
+def create_obj_of_sign_up(request):
+    data = json.loads(request.body)
+    date = datetime.date(data['year'], data['month'], data['day'])
+
+    person_name = models.PersonDataAndDate.objects.create(last_name=data['last_name'],
+                                                          first_name=data['first_name'],
+                                                          patronymic=data['patronymic'],
+                                                          phone_number=data['phone_number'],
+                                                          date=date,
+                                                          time=models.Time.objects.get(pk=data['time']),
+                                                          service=models.Service.objects.get(pk=data['service']),
+                                                          payment_id=data['payment_id']
+                                                          )
+    if models.PersonDataAndDate.objects.filter(date=date).count() >= models.Time.objects.count():
+        models.DisabledDates.objects.create(start_date=date, creator_is_human=False)
+
+    return JsonResponse({'pk': str(person_name.pk)})
 
 
 @csrf_exempt
@@ -84,25 +124,6 @@ def validate_date(request):
     return JsonResponse(response)
 
 
-def payments(request, pk):
-    person = models.PersonDataAndDate.objects.get(pk=pk)
-    prepayment = ServiceForHtml.objects.get(service=person.service.service).prepayment
-
-    person_name = f'{person.last_name} {person.first_name} {person.patronymic}'
-
-    payment = YandexPayment()
-    payment_response = payment.create_payment(prepayment, person.service.service, person.phone_number,
-                                              person_name, request.user.is_authenticated, request.user.pk)
-
-    person.payment_id = payment_response.id
-    person.save()
-    context = {
-        'pk': pk,
-        'confirmation_token': payment_response.confirmation.confirmation_token
-    }
-    return render(request, 'sign_up/payment.html', context)
-
-
 def sign_up_finish(request, pk):
     person_name = models.PersonDataAndDate.objects.get(pk=pk)
     date = person_name.date.strftime('%d.%m')
@@ -136,6 +157,14 @@ def create_calendar_event(request):
     return HttpResponse(status=200)
 
 
-def sign_up_error(request, pk):
-    models.PersonDataAndDate.objects.get(pk=pk).delete()
+def sign_up_error(request):
     return render(request, 'sign_up/error.html')
+
+
+def delete_obj_of_sign_up(request, pk):
+    try:
+        models.PersonDataAndDate.objects.get(pk=pk).delete()
+    except:
+        return HttpResponse(status=400)
+    else:
+        return HttpResponse(status=200)

@@ -7,9 +7,10 @@ from . import views
 urlpatterns = [
     path('', views.sign_up, name='sign_up'),
     path('validate_date/', views.validate_date, name='validate_date'),
-    path('payment/<int:pk>/', views.payments, name='payment'),
+    path('create_obj_of_sign_up/', views.create_obj_of_sign_up, name='create_obj_of_sign_up'),
     path('finish/<int:pk>/', views.sign_up_finish, name='sign_up_finish'),
-    path('error/<int:pk>/', views.sign_up_error, name='sign_up_error'),
+    path('error/', views.sign_up_error, name='sign_up_error'),
+    path('delete_obj_of_sign_up/<int:pk>/', views.delete_obj_of_sign_up, name='delete_obj_of_sign_up'),
     path('create_calendar_event/', views.create_calendar_event, name='create_calendar_event'),
     path('<service>/', views.sign_up, name='sign_up_with_args'),
 ]

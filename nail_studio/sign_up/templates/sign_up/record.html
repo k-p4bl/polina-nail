@@ -21,6 +21,9 @@
 	<meta name="msapplication-TileColor" content="#39b329">
 	<meta name="theme-color" content="#39b329">
 
+    <script src="https://yookassa.ru/checkout-widget/v1/checkout-widget.js"></script>
+
+
     <title>Форма записи</title>
 </head>
 <body>
@@ -197,6 +200,68 @@
                     btn.disabled = true;
                 });
             </script>
+
+            {% if confirmation_token is not None %}
+            <script>
+              //Инициализация виджета. Все параметры обязательные.
+              const checkout = new window.YooMoneyCheckoutWidget({
+                  confirmation_token: "{{ confirmation_token }}", //Токен, который перед проведением оплаты нужно получить от ЮKassa
+
+                  //При необходимости можно изменить цвета виджета, подробные настройки см. в документации
+                   customization: {
+                    modal: true
+
+                    //Настройка цветовой схемы, минимум один параметр, значения цветов в HEX
+                    //colors: {
+                        //Цвет акцентных элементов: кнопка Заплатить, выбранные переключатели, опции и текстовые поля
+                        //control_primary: '#00BF96', //Значение цвета в HEX
+
+                        //Цвет платежной формы и ее элементов
+                        //background: '#F2F3F5' //Значение цвета в HEX
+                    //}
+
+                  },
+                  error_callback: function(error) {
+                      console.log(error)
+                  }
+              });
+
+              checkout.on('success', () => {
+                      //Код, который нужно выполнить после успешной оплаты.
+
+                      const sign_up = {
+                          last_name: '{{ data.last_name }}',
+                          first_name: '{{ data.first_name }}',
+                          patronymic: '{{ data.patronymic }}',
+                          phone_number: '{{ data.phone_number }}',
+                          year: {{ data.year }},
+                          month: {{ data.month }},
+                          day: {{ data.day }},
+                          time: {{ data.time }},
+                          service: '{{ data.service.pk }}',
+                          payment_id: '{{ data.payment_id }}'
+                      };
+                      sendRequest('POST', "{% url 'create_obj_of_sign_up' %}", sign_up)
+                          .then(data => {
+                              //Удаление инициализированного виджета
+                              checkout.destroy();
+
+                              window.location.href = 'finish/' + data['pk'];
+                          })
+                          .catch(err => console.log(err))
+                  });
+
+              checkout.on('fail', () => {
+                      //Удаление инициализированного виджета
+                      checkout.destroy();
+                      window.location.href = "{% url 'sign_up_error' %}";
+                  });
+
+              //Отображение платежной формы в контейнере
+              checkout.render('payment-form');
+            </script>
+            {% endif %}
+
         </div>
         <p class="privacy-text">Нажимая "Записаться" вы соглашаетесь с <a style="color: black;" target="_blank" href="{% url 'privacy' %}">политикой конфиденциальности</a></p>
         <style>
