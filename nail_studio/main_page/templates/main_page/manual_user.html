@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://polina-nail.ru/static/favicons/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="https://polina-nail.ru/static/favicons/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="https://polina-nail.ru/static/favicons/favicon-16x16.png">
+	<link rel="shortcut icon" type="image/png" href="https://polina-nail.ru/static/favicons/favicon.ico"/>
+	<link rel="manifest" href="https://polina-nail.ru/static/favicons/site.webmanifest">
+	<link rel="mask-icon" href="https://polina-nail.ru/static/favicons/safari-pinned-tab.svg" color="#39b329">
+	<meta name="msapplication-TileColor" content="#39b329">
+	<meta name="theme-color" content="#39b329">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500&display=swap" rel="stylesheet">
+	<link
+  		rel="stylesheet"
+  		href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+	/>
+
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'main_page/css/manual_user.css' %}">
+    <script src="{% static 'main_page/js/hamburger-button.js'%}" defer></script>
+
+    <title>Мануал пользователя</title>
+</head>
+<body>
+
+<header class="header">
+	<div class="container">
+		<div class="wrapper-header-link">
+			<div class="wrapper-logo">
+				<a href="{% url 'main_page' %}"><img class="site_logo" src="{% static 'main_page/images/logo.png' %}" width="80" height="80"></a>
+			</div>
+
+			<nav class="navigation">
+				<div class="wrapper-nav-link"><a class="nav-link" href="#1">Как записаться на услугу</a></div>
+				<div class="wrapper-nav-link"><a class="nav-link" href="#2">Как отменить или перенести запись</a></div>
+				<div class="wrapper-nav-link"><a class="nav-link" href="#3">Как не потерять сайт</a></div>
+			</nav>
+			<div class="wrapper-button-make-an-appointment">
+				<div class="wrapper-icon">
+					<a href="https://vk.com/kirnails"><img id="vk_logo" src="{% static 'main_page/images/vk_logo.jpg' %}" width="30" height="30"></a>
+					<a href="https://chat.whatsapp.com/GQULPGO151S6nLrkp4Fkw8"><img id="wapp_logo" src="{% static 'main_page/images/wapp_logo.jpg' %}" width="30" height="30"></a>
+				</div>
+				<button class="button-make-an-appointment" onclick="location.href='{% url 'sign_up' %}'">
+					Записаться
+				</button>
+				<div class="hamburger-button">
+					<div class="hamburger-button-top"></div>
+					<div class="hamburger-button-middle"></div>
+					<div class="hamburger-button-bottom"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+<div class="container-body">
+    <h1>Инструкция по пользованию сайта</h1>
+    <h2 id="1">Как записаться на услугу</h2>
+    <dl>
+        <dt>
+            <div>Сперва нужно нажать кнопку "онлайн запись"</div>
+        </dt>
+        <dd>
+            <div>
+                <img src="/media/main_page/user_step1.png" width="200px">
+            </div>
+        </dd>
+        <dt>
+        <div>Либо выбрать из предложенных услуг на главной странице</div>
+        </dt>
+        <dd>
+            <div>
+                <img src="/media/main_page/user_step1(1).png" width="150px">
+                <img src="/media/main_page/user_step1(2).png" width="150px">
+                <img src="/media/main_page/user_step1(3).png" width="150px">
+                <img src="/media/main_page/user_step1(4).png" width="150px">
+            </div>
+        </dd>
+        <dt>
+            <div>
+                Далее вы будите перенаправлены на страницу записи, где нужно ввести данные и выбрать услугу
+                (в случае если не выбрали её на главной странице), дату и время
+            </div>
+        </dt>
+        <dd>
+            <img src="/media/main_page/user_step2.png" width="200px">
+        </dd>
+        <dt>
+            <div>
+                После заполнения формы вы будите перенесены на страницу оплаты, где можно выбрать способы оплаты.
+            </div>
+        </dt>
+        <dd>
+            <div>Если вы уже оплачивали банковской картой и нажимали галочку запомнить карту,
+                то она будет сохранена как способ оплаты</div>
+            <div><img src="/media/main_page/user_step3.png" width="200px"></div>
+        </dd>
+        <dt>После оплаты вы будите перенаправлены на страницу успешного завершения записи</dt>
+    </dl>
+    <h2 id="2">Как отменить или перенести запись</h2>
+    <dl>
+        <dt>
+            Для этого нужно написать на контактный номер,
+            расположенный в разделе контакты, на главной странице сайта, в мессенджере What'sApp
+        </dt>
+        <dd>
+            <h4>Пример сообщения</h4>
+            <div>
+                Здравствуйте! Пожалуйста, перенесите запись:
+                <ul>
+                    <li>ФИО</li>
+                    <li>Номер телефона указанный при записи</li>
+                    <li>Дата и время</li>
+                </ul>
+                на (дата и время)
+            </div>
+            <br>или
+            <div>
+                <br>Здравствуйте! Пожалуйста, отмените запись:
+                <ul>
+                    <li>ФИО</li>
+                    <li>Номер телефона указанный при записи</li>
+                    <li>Дата и время</li>
+                </ul>
+            </div>
+        </dd>
+        <dt>В случае отмены имейте ввиду что, если до записи осталось меньше 3-х дней, то предоплата не возвращается</dt>
+    </dl>
+    <h2 id="3">Как не потерять сайт</h2>
+    <dl>
+        <dt>На мобильных устройствах сайт можно закрепить на рабочем столе</dt>
+        <dt><h3>На Iphone</h3></dt>
+        <dd>
+            <p>В браузере Safari</p>
+            <img src="/media/main_page/user_save_site_iphone.jpg" width="200px">
+            <img src="/media/main_page/user_save_site_iphone(1).jpg" width="200px">
+        </dd>
+        <dt><h3>На Android</h3></dt>
+        <dd>
+            <p>
+                На разных устройствах процесс немного отличается, но в целом нужно нажать на три точки и добавить ярлык
+                на главный экран
+            </p>
+            <img src="/media/main_page/user_save_site_android.png" width="290px">
+        </dd>
+    </dl>
+</div>
+</body>
+</html>

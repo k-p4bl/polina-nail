@@ -88,9 +88,11 @@ def payments(request, pk):
     person = models.PersonDataAndDate.objects.get(pk=pk)
     prepayment = ServiceForHtml.objects.get(service=person.service.service).prepayment
 
+    person_name = f'{person.last_name} {person.first_name} {person.patronymic}'
+
     payment = YandexPayment()
     payment_response = payment.create_payment(prepayment, person.service.service, person.phone_number,
-                                              person.first_name, request.user.is_authenticated, request.user.pk)
+                                              person_name, request.user.is_authenticated, request.user.pk)
 
     person.payment_id = payment_response.id
     person.save()

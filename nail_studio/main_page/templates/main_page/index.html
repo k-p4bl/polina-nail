@@ -26,6 +26,7 @@
 	<meta name="theme-color" content="#39b329">
 
 	<link rel="stylesheet" type="text/css" href="{% static 'main_page/css/index.css' %}">
+	<script src="{% static 'main_page/js/hamburger-button.js'%}" defer></script>
 </head>
 <body>
 
@@ -265,6 +266,7 @@
 	<div class="container">
 		<div class="footer-info" style="display: flex;justify-content: space-around;">
 			<div>
+				<p style="margin-bottom: 5px;margin-top: 0;"><a style="text-decoration: none;color: #777e89;" target="_blank" href="{% url 'manual_user' %}">Мануал по использованию сайта</a></p>
 				<p style="margin-bottom: 5px;margin-top: 0;"><a style="text-decoration: none;color: #777e89;" target="_blank" href="{% url 'privacy' %}">Политика конфиденциальности</a></p>
 				<p style="margin-top: 5px;"><a style="text-decoration: none;color: #777e89;" target="_blank" href="{% static 'main_page/images/sertif.png'%}">Сертификат</a></p>
 			</div>
@@ -297,15 +299,5 @@
 	</div>
 </footer>
 
-<script>
-	document.querySelector('.hamburger-button').addEventListener('click', function() {
-		this.classList.toggle('active');
-		document.querySelector('.navigation').classList.toggle('open');
-	})
-	document.querySelector('.navigation').addEventListener('click', function() {
-		this.classList.toggle('open');
-		document.querySelector('.hamburger-button').classList.toggle('active');
-	})
-</script>
 </body>
 </html>

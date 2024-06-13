@@ -1,0 +1,174 @@
+*,*:before, *:after {
+	box-sizing: border-box;
+}
+body {
+	background: #F7F7F7;
+	margin: 0;
+	font-family: "Roboto", sans-serif;
+}
+
+p {
+	font-family: "Roboto", sans-serif;
+	font-weight: 300;
+	color: #383737;
+}
+
+.header {
+	position: sticky;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 100;
+	background: linear-gradient(#39B329, 98%, #f7f7f7);
+
+}
+
+.container {
+	width: 100%;
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+.container-body {
+    width: 90%;
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+.wrapper-header-link {
+	display: flex;
+	justify-content: space-between;
+	padding: 30px;
+}
+
+.navigation {
+	display: inline-flex;
+	height: 39.5px;
+	align-items: center;
+}
+
+.nav-link {
+	color: #000;
+	margin-right: 30px;
+	padding: 10px 0 10px 0;
+	text-decoration: none;
+	font-size: 16px;
+	font-weight: 500;
+}
+.wrapper-logo {
+	margin-right: 10px;
+	display: inline-flex;
+	height: 40px;
+	align-items: center;
+}
+.site_logo {
+	background-color: #1da23f;
+	border-radius: 40%;
+}
+
+.wrapper-icon {
+	margin-right: 10px;
+	display: flex;
+	width: 65px;
+	justify-content: space-between;
+	align-items: center;
+}
+#vk_logo {
+	border-radius: 50%;
+}
+#wapp_logo {
+	border-radius: 50%;
+}
+.hamburger-button {
+	display: none;
+}
+.wrapper-button-make-an-appointment {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	min-width: 30%;
+}
+
+.button-make-an-appointment {
+    background: #efefef;
+	padding: 10px 30px;
+	border: 0;
+	border-radius: 5px;
+    -webkit-appearance: none;
+
+}
+
+.button-make-an-appointment:hover {
+	cursor: pointer;
+	opacity: 0.9;
+}
+
+.link-make-an-appointment {
+	text-decoration: none;
+}
+
+
+@media (max-width: 660px) {
+	.navigation {
+		display: none;
+		flex-direction: column;
+		position: fixed;
+		width: 100%;
+		height: 100%;
+		top: 0; bottom: 0; left: 0; right: 0;
+		z-index: 50;
+		overflow-y: auto;
+		padding: 80px 40px 50px 40px;
+		background: linear-gradient(#f7f7f7, 2%, #39B329, 99%, #f7f7f7);
+	}
+	.navigation.open {
+		display: inline-block;
+	}
+	.wrapper-nav-link {
+	    margin-top: 30px;
+	    margin-bottom: 30px;
+	}
+	.nav-link {
+		font-size: 24px;
+		font-weight: 300;
+	}
+	.button-make-an-appointment {display: none;}
+	.hamburger-button {
+		display: flex;
+		position: relative;
+		z-index: 50;
+	    flex-direction: column;
+	  	flex-wrap: wrap;
+	  	justify-content: space-between;
+	  	height: 2.5rem;
+	 	width: 2.5rem;
+	  	cursor: pointer;
+	}
+	.hamburger-button-top,
+	.hamburger-button-middle,
+	.hamburger-button-bottom {
+  		height: 5px;
+  		background: black;
+  		border-radius: 5px;
+  		margin: 3px 0px;
+  		transform-origin: left;
+  		transition: all 0.5s;
+	}
+	.hamburger-button.active .hamburger-button-top {
+  		transform: rotate(45deg);
+	}
+	.hamburger-button.active .hamburger-button-middle {
+ 		opacity: 0;
+	}
+	.hamburger-button.active .hamburger-button-bottom {
+ 		transform: rotate(-45deg);
+	}
+	.wrapper-icon{
+		width: 110px;
+	}
+
+	#vk_logo,#wapp_logo{
+		width: 50px;
+		height: 50px;
+	}
+}

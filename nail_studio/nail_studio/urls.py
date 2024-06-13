@@ -16,10 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.templatetags.static import static
+from django.conf.urls.static import static
 from django.views.generic.base import RedirectView
 
 from main_page.views import bad_request
+from nail_studio import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,5 +29,9 @@ urlpatterns = [
     path('users/', include('users.urls', namespace='users')),
     path('favicon.ico', RedirectView.as_view(url='static/favicons/favicon.ico')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 
 handler400 = bad_request

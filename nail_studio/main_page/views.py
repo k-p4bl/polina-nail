@@ -26,3 +26,7 @@ def bad_request(request, exception):
     return HttpResponseBadRequest(loader.render_to_string('main_page/bad_request.html',
                                                           {'exception': exception},
                                                           request))
+
+
+def manual_user(request):
+    return render(request, 'main_page/manual_user.html')
