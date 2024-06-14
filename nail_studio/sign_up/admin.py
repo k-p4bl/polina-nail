@@ -52,13 +52,7 @@ class PersonDataAdmin(admin.ModelAdmin):
             except DisabledDates.DoesNotExist:
                 pass
 
-            if PersonDataAndDate.objects.filter(date=cd['date']).count() >= Time.objects.count():
-                DisabledDates.objects.create(start_date=cd['date'], creator_is_human=False)
-
         else:
-
-            if PersonDataAndDate.objects.filter(date=cd['date']).count() >= Time.objects.count():
-                DisabledDates.objects.create(start_date=cd['date'], creator_is_human=False)
 
             date = obj.date.strftime('%Y-%m-%d')
             time = obj.time.time
@@ -72,6 +66,9 @@ class PersonDataAdmin(admin.ModelAdmin):
             calendar.add_event(date=date, time=time, service=service_for_calendar, description=description, hour=h,
                                minute=m)
         super().save_model(request, obj, form, change)
+
+        if PersonDataAndDate.objects.filter(date=cd['date']).count() >= Time.objects.count():
+            DisabledDates.objects.create(start_date=cd['date'], creator_is_human=False)
 
     def delete_model(self, request, obj: PersonDataAndDate):
         if obj.payment_id:
