@@ -1,11 +1,11 @@
 from django.contrib import admin
-from django.utils.timezone import localtime, localdate
+from django.utils.timezone import localdate
 
 from integrations.google.calendar.calendar_client import GoogleCalendar
 from integrations.yookassa.payments import YandexPayment
 from main_page.models import ServiceForHtml
 from .forms import SignUpAdminForm
-from .models import PersonDataAndDate, DisabledDates, Service, Time
+from .models import PersonDataAndDate, DisabledDates, Service, Time, AdditionalService
 
 
 @admin.register(PersonDataAndDate)
@@ -37,9 +37,13 @@ class PersonDataAdmin(admin.ModelAdmin):
                     or 'patronymic' in form.changed_data \
                     or 'phone_number' in form.changed_data:
                 args['description'] = f"{cd['phone_number']} {cd['last_name']} {cd['first_name']} {cd['patronymic']}"
-            if 'service' in form.changed_data:
+            if 'service' in form.changed_data \
+                    or 'additional_service' in form.changed_data:
+                add_services = cd['additional_service']
                 args['service'] = cd['service'].service
                 args['hour'], args['minute'] = ServiceForHtml.objects.get(service=args['service']).get_time_to_comp()
+                for service in add_services:
+                    args['service'] += f'\n\t+{service}'
             if 'date' in form.changed_data:
                 args['date'] = cd['date']
             if 'time' in form.changed_data:
@@ -53,15 +57,19 @@ class PersonDataAdmin(admin.ModelAdmin):
                 pass
 
         else:
-
             date = obj.date.strftime('%Y-%m-%d')
             time = obj.time.time
             service_for_calendar = obj.service.service
+            additional_services = cd['additional_service'].all()
             description = (f"{obj.phone_number} "
                            f"{obj.last_name} "
                            f"{obj.first_name} "
                            f"{obj.patronymic}")
             h, m = ServiceForHtml.objects.get(service=service_for_calendar).get_time_to_comp()
+
+            if additional_services:
+                for service in additional_services:
+                    service_for_calendar += f'\n\t+{service}'
 
             calendar.add_event(date=date, time=time, service=service_for_calendar, description=description, hour=h,
                                minute=m)
@@ -69,6 +77,9 @@ class PersonDataAdmin(admin.ModelAdmin):
 
         if PersonDataAndDate.objects.filter(date=cd['date']).count() >= Time.objects.count():
             DisabledDates.objects.create(start_date=cd['date'], creator_is_human=False)
+
+        for service in cd['additional_service'].all():
+            obj.additional_service.add(service)
 
     def delete_model(self, request, obj: PersonDataAndDate):
         if obj.payment_id:
@@ -96,3 +107,4 @@ class DisabledDatesAdmin(admin.ModelAdmin):
 
 admin.site.register(Service)
 admin.site.register(Time)
+admin.site.register(AdditionalService)

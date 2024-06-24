@@ -4,7 +4,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.forms.utils import ErrorList
 
-from .models import PersonDataAndDate, Service, Time
+from .models import PersonDataAndDate, Service, Time, AdditionalService
 from main_page.models import ServiceForHtml
 
 
@@ -25,6 +25,15 @@ class SignUpForm(forms.Form):
                                  label='Услуга',
                                  widget=forms.Select(attrs={'id': "service"})
                                  )
+
+    add_service = forms.MultipleChoiceField(
+        choices=[(i.pk, i) for i in AdditionalService.objects.all()],
+        # choices=[(0, 'Снятие чужой работы'), (1, 'Дизайн'),
+        #          (2, 'Парафинотерапия')],
+        label='Доп. услуга',
+        required=False
+    )
+    # add_service = forms.MultipleChoiceField(choices=[i.add_service for i in AdditionalService.objects.all()])
 
     person_name = forms.CharField(label='Ф.И.О', widget=forms.TextInput(attrs={'name': "person-name",
                                                                                'id': "person-name",
@@ -70,7 +79,7 @@ class SignUpForm(forms.Form):
 class SignUpAdminForm(forms.ModelForm):
     class Meta:
         model = PersonDataAndDate
-        fields = ['service', 'last_name', 'first_name', 'patronymic', 'phone_number', 'date', 'time']
+        fields = ['service', 'additional_service', 'last_name', 'first_name', 'patronymic', 'phone_number', 'date', 'time']
 
     def clean_time(self):
         persons_qs = PersonDataAndDate.objects.filter(date=self.cleaned_data['date'])
@@ -84,4 +93,3 @@ class SignUpAdminForm(forms.ModelForm):
         if new_time in busy_time_lst:
             raise ValidationError('К сожалению это время уже занято')
         return new_time
-

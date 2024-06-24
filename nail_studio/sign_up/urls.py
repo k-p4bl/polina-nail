@@ -7,6 +7,7 @@ from . import views
 urlpatterns = [
     path('', views.sign_up, name='sign_up'),
     path('validate_date/', views.validate_date, name='validate_date'),
+    path('get_additional_service/', views.get_additional_service, name='get_additional_service'),
     path('create_obj_of_sign_up/', views.create_obj_of_sign_up, name='create_obj_of_sign_up'),
     path('finish/<int:pk>/', views.sign_up_finish, name='sign_up_finish'),
     path('error/', views.sign_up_error, name='sign_up_error'),

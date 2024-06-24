@@ -1,9 +1,8 @@
 import datetime
 import json
 
-from django.contrib.auth.models import User
 from django.http import JsonResponse, HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 
 from integrations.google.calendar.calendar_client import GoogleCalendar
 from integrations.yookassa.payments import YandexPayment
@@ -32,40 +31,35 @@ def sign_up(request, service=None):
                 'first_name': cd['person_name'][1],
                 'patronymic': cd['person_name'][2],
                 'phone_number': cd['phone_number'],
-                'year': cd['date'].strftime("%Y"),
-                'month': cd['date'].strftime("%m"),
-                'day': cd['date'].strftime("%d"),
+                'year': int(cd['date'].strftime("%Y")),
+                'month': int(cd['date'].strftime("%m")),
+                'day': int(cd['date'].strftime("%d")),
                 'time': cd['time'].pk,
-                'service': cd['service']
+                'service': cd['service'].pk,
+                'add_services_id': cd['add_service']
             }
 
-            prepayment = ServiceForHtml.objects.get(service=data['service'].service).prepayment
+            prepayment = ServiceForHtml.objects.get(service=cd['service'].service).prepayment
 
             person_name = f"{data['last_name']} {data['first_name']} {data['patronymic']}"
 
             payment = YandexPayment()
-            payment_response = payment.create_payment(prepayment, data['service'].service, data['phone_number'],
+            payment_response = payment.create_payment(prepayment, cd['service'].service, data['phone_number'],
                                                       person_name, request.user.is_authenticated, request.user.pk)
 
             data['payment_id'] = payment_response.id
             confirmation_token = payment_response.confirmation.confirmation_token
 
-        else:
-            data = None
-            confirmation_token = None
+            return JsonResponse({'data': data, 'confirmation_token': confirmation_token})
 
     else:
         form = SignUpForm(error_class=SignUpErrorList)
-        data = None
-        confirmation_token = None
 
     context = {
         'dates': list_of_date,
         'service': service,
         'form': form,
         'ServiceForHtml': service_html,
-        'data': data,
-        'confirmation_token': confirmation_token
     }
 
     return render(request, 'sign_up/record.html', context)
@@ -87,6 +81,10 @@ def create_obj_of_sign_up(request):
                                                           )
     if models.PersonDataAndDate.objects.filter(date=date).count() >= models.Time.objects.count():
         models.DisabledDates.objects.create(start_date=date, creator_is_human=False)
+
+    for service_id in data['add_services_id']:
+        add_service = models.AdditionalService.objects.get(id=int(service_id))
+        person_name.additional_service.add(add_service)
 
     return JsonResponse({'pk': str(person_name.pk)})
 
@@ -124,6 +122,14 @@ def validate_date(request):
     return JsonResponse(response)
 
 
+def get_additional_service(request):
+    add_services = models.AdditionalService.objects.all()
+    response = {}
+    for service in add_services:
+        response[str(service.pk)] = service.add_service
+    return JsonResponse(response)
+
+
 def sign_up_finish(request, pk):
     person_name = models.PersonDataAndDate.objects.get(pk=pk)
     date = person_name.date.strftime('%d.%m')
@@ -142,15 +148,23 @@ def create_calendar_event(request):
     pk = json.loads(request.body)
 
     person_name = models.PersonDataAndDate.objects.get(pk=pk)
+    additional_services = person_name.additional_service.all()
     calendar = GoogleCalendar()
     date = person_name.date.strftime('%Y-%m-%d')
     time = person_name.time.time
     service_for_calendar = person_name.service.service
-    description = (f"{person_name.phone_number} "
-                   f"{person_name.last_name} "
-                   f"{person_name.first_name} "
-                   f"{person_name.patronymic}")
+    description = (
+        f"{person_name.phone_number} "
+        f"{person_name.last_name} "
+        f"{person_name.first_name} "
+        f"{person_name.patronymic}"
+    )
+
     h, m = ServiceForHtml.objects.get(service=service_for_calendar).get_time_to_comp()
+
+    if additional_services:
+        for service in additional_services:
+            service_for_calendar += f'\n\t+{service}'
 
     calendar.add_event(date=date, time=time, service=service_for_calendar, description=description, hour=h, minute=m)
 
