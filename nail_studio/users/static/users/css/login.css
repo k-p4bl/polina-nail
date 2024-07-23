@@ -1,0 +1,114 @@
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    position: relative;
+    min-height: 100vh;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    background: #f5f5f5;
+    font-family: "Roboto", sans-serif;
+}
+
+.container {
+    height: 100%;
+    width: 450px;
+    max-width: 100%;
+    border-radius: 20px;
+    background-color: #fff;
+}
+
+.logo {
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.logo-link-text {
+    margin-left: 10px;
+    font-size: 24px;
+    color: black;
+}
+
+.phone-number, .password {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.phone-number {
+    margin: 30px 0 15px;
+}
+.password {
+    margin: 15px 0 0;
+}
+
+#id_username, #id_password {
+    padding: 2px 16px;
+    -webkit-appearance: none;
+    height: 56px;
+    width: 312px;
+    max-width: 100%;
+    border: #b1b1b1 1px solid;
+    border-radius: 25px;
+    font-size: 24px;
+}
+
+#phone-number:focus-visible {
+    outline-offset: 0px;
+    outline: #06b6d4 auto 1px;
+}
+.foget-password {
+    display: flex;
+    width: 312px;
+    margin: 0 auto 0 85px;
+}
+
+#foget-password {
+    font-size: 14px;
+    color: black;
+    text-decoration: none;
+}
+#foget-password:hover {
+    color: rgb(109, 109, 109);
+}
+
+.button-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.button{
+    margin: 20px 0 25px;
+    -webkit-appearance: none;
+    height: 56px;
+    width: 312px;
+    max-width: 100%;
+    border-radius: 25px;
+    font-size: 18px;
+    border: none;
+    background-color: #06b6d4;
+    color: #fff;
+    cursor: pointer;
+}
+
+.button:active {
+    transform: scale(.96);
+}
+
+.button-reg {
+    margin: 0 0 25px;
+    background-color: #fff;
+    color: black;
+    border: #6d6d6d solid 1px;
+}

@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 
 
@@ -54,6 +55,7 @@ class PersonDataAndDate(models.Model):
     additional_service = models.ManyToManyField(AdditionalService, blank=True, verbose_name='Дополнительные услуги')
     payment_id = models.CharField(max_length=255, verbose_name='id платежа предоплаты', null=True, blank=True,
                                   editable=False)
+    user_id = models.ForeignKey(get_user_model(), models.PROTECT, blank=True, null=True, verbose_name="Клиент")
 
     def __str__(self):
         return self.last_name
