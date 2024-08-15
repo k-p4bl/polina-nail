@@ -12,7 +12,8 @@ from sign_up.models import Time, PersonDataAndDate
 class LoginForm(AuthenticationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={
         'class': 'form-input',
-        "data-tel-input": ""
+        "data-tel-input": "",
+        'type': "tel"
     }))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-input'}))
 
