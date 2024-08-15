@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500&display=swap" rel="stylesheet">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://polina-nail.ru/static/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://polina-nail.ru/static/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://polina-nail.ru/static/favicons/favicon-16x16.png">
+    <link rel="shortcut icon" type="image/png" href="https://polina-nail.ru/static/favicons/favicon.ico"/>
+    <link rel="manifest" href="https://polina-nail.ru/static/favicons/site.webmanifest">
+    <link rel="mask-icon" href="https://polina-nail.ru/static/favicons/safari-pinned-tab.svg" color="#39b329">
+    <meta name="msapplication-TileColor" content="#39b329">
+    <meta name="theme-color" content="#39b329">
+    
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'users/css/past_sign_ups.css' %}">
+
+    <title>История записей</title>
+</head>
+<body>
+    <div class="container">
+        <button class="exit" onclick="location.href='{% url 'users:personal-account' %}'"></button>
+        <h1>История записей</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Услуга</th>
+                    <th>Доп. услуги</th>
+                    <th>Дата</th>
+                    <th>Время</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sign_up in p_sign_ups %}
+                    <tr>
+                        <th>{{ sign_up.service }}</th>
+                        <th>
+                            {% if sign_up.additional_service.all %}
+                                {% for add_serv in sign_up.additional_service.all %}
+                                    {{ add_serv }}    
+                                {% endfor %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </th>
+                        <th>{{ sign_up.date }}</th>
+                        <th>{{ sign_up.time }}</th>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

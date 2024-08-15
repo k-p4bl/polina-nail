@@ -8,9 +8,12 @@
 
 
     {% load static %}
+    <link href="{% static 'sign_up/css/sign_up.css'%}" rel="stylesheet">
     <link href="{% static 'sign_up/vanilla-calendar/build/vanilla-calendar.min.css'%}" rel="stylesheet">
     <script src="{% static 'sign_up/vanilla-calendar/build/vanilla-calendar.min.js'%}" defer></script>
     <script src="{% static 'sign_up/js/phoneinput.js'%}"></script>
+    <script src="{% static 'sign_up/js/add_service.js'%}" defer></script>
+
 
     <link rel="apple-touch-icon" sizes="180x180" href="https://polina-nail.ru/static/favicons/apple-touch-icon.png">
 	<link rel="icon" type="image/png" sizes="32x32" href="https://polina-nail.ru/static/favicons/favicon-32x32.png">
@@ -28,7 +31,7 @@
 </head>
 <body>
 <div class="record-block">
-    <form action="{% url 'sign_up' %}" method="post">
+    <form>
         {% csrf_token %}
         <div class="personal-data">
             {{ form.non_field_errors }}
@@ -47,9 +50,26 @@
                     });
                 </script>
             </div>
+
+            <div class="add-service" id="hiddenRealAddService">
+                {{ form.add_service }}
+                <span id="error-add-service" style="color: red; font-family: Arial;">{{ form.add_service.errors }}</span>
+            </div>
+            
+            <div class="wrapper-add-button">
+                <button class="button-add-service" type="button">
+                    <img class="img-button-add-service" src="/media/sign_up/free-icon-font-square-plus.png">
+                    <span class="text-button-add-service">Дополнительная услуга</span>
+                </button>
+            </div>
+            
             <div class="name">
                 <p class="text-personal-data">{{ form.person_name.label }}</p>
-                {{ form.person_name }}
+                {% if data %}
+                    <input type="text" name="person_name" id="person-name" value="{{ data.person_name }}" placeholder="Иванов Иван Иванович" required>
+                {% else %}
+                    {{ form.person_name }}
+                {% endif %}
                 <span id="error-name" style="color: red; font-family: Arial;">{{ form.person_name.errors }}</span>
                 <script>
                     document.querySelector('#person-name').addEventListener('input', function(e){
@@ -60,7 +80,11 @@
             </div>
             <div class="number">
                 <p class="text-personal-data">{{ form.phone_number.label }}</p>
-                {{ form.phone_number }}
+                {% if data %}
+                    <input type="text" name="phone_number" id="phone-number" value="{{ data.phone_number }}" data-tel-input maxlength="18" required>
+                {% else %}
+                    {{ form.phone_number }}
+                {% endif %}
                 <span id="error-number" style="color: red; font-family: Arial;">{{ form.phone_number.errors }}</span>
                 <script>
                     document.querySelector('#phone-number').addEventListener('input', function(e){
@@ -93,39 +117,8 @@
             <span id="error-time" style="color: red; font-family: Arial;">{{ form.time.errors }}</span>
         </div>
         <script>
-            let ten = document.querySelector('#id_time_0');
-            let thirteen = document.querySelector('#id_time_1');
-            let sixteen = document.querySelector('#id_time_2');
-            ten.disabled = true;
-            thirteen.disabled = true;
-            sixteen.disabled = true;
-
-            requestURL = "{% url 'validate_date' %}"
-
-            function sendRequest (method, url, date) {
-                return new Promise ((resolve, reject) => {
-                    const xhr = new XMLHttpRequest()
-
-                    xhr.open(method, url)
-
-                    xhr.responseType = 'json'
-                    xhr.setRequestHeader('Content-Type', 'application/json')
-
-                    xhr.onload = () => {
-                        if (xhr.status >= 400) {
-                            reject(xhr.response)
-                        } else {
-                            resolve(xhr.response)
-                        }
-                    }
-
-                    xhr.onerror = () => {
-                        reject(xhr.response)
-                    }
-                    xhr.send(JSON.stringify(date))
-                })
-            }
-
+            const requestURL = "{% url 'sign_up' %}"
+            const validateDate = "{% url 'validate_date' %}"
 
             let dis = [];
             {% if dates %}
@@ -133,134 +126,12 @@
                     dis.push('{{d}}');
                 {% endfor %}
             {% endif %}
-
-
-          document.addEventListener('DOMContentLoaded', () => {
-            const calendar = new VanillaCalendar('#calendar',
-             {
-                settings: {
-                    lang: 'ru-RU',
-                    range: {
-                        disablePast: true,
-                        disableWeekday: [1],
-                        disabled: dis,
-                    },
-                    visibility: {
-                        theme: 'light',
-                    },
-                },
-                actions: {
-                    clickDay(event, self) {
-                            let date = document.querySelector('#date');
-                            let errorDate = document.querySelector('#error-date');
-                            let errorTime = document.querySelector('#error-time');
-                            date.value = self.selectedDates
-                            errorDate.style = 'display: none';
-                            errorTime.style = 'display: none';
-
-                            sendRequest('POST', requestURL, self.selectedDates)
-                                .then(data => {
-                                    ten.disabled = data['10'];
-                                    if (ten.disabled) {
-                                        ten.checked = false
-                                    }
-                                    thirteen.disabled = data['13'];
-                                    if (thirteen.disabled) {
-                                        thirteen.checked = false
-                                    }
-                                    sixteen.disabled = data['16'];
-                                    if (sixteen.disabled) {
-                                        sixteen.checked = false
-                                    }
-                                })
-                                .catch(err => console.log(err))
-                    },
-                },
-            }
-            );
-            calendar.init();
-          });
-            if (ten.disabled) {
-                ten.checked = false
-            }
-            if (thirteen.disabled) {
-                thirteen.checked = false
-            }
-            if (sixteen.disabled) {
-                sixteen.checked = false
-            }
         </script>
+        <script src="{% static 'sign_up/js/calendar.js'%}"></script>
 
         <div class="submit-wrap">
             <button type="submit" id="submit">Записаться</button>
-            <script>
-                var forms = document.querySelector('form');
-                forms.addEventListener('submit', function(){
-                    var btn = this.querySelector("input[type=submit], button[type=submit]");
-                    btn.disabled = true;
-                });
-            </script>
-
-            {% if confirmation_token is not None %}
-            <script>
-              //Инициализация виджета. Все параметры обязательные.
-              const checkout = new window.YooMoneyCheckoutWidget({
-                  confirmation_token: "{{ confirmation_token }}", //Токен, который перед проведением оплаты нужно получить от ЮKassa
-
-                  //При необходимости можно изменить цвета виджета, подробные настройки см. в документации
-                   customization: {
-                    modal: true
-
-                    //Настройка цветовой схемы, минимум один параметр, значения цветов в HEX
-                    //colors: {
-                        //Цвет акцентных элементов: кнопка Заплатить, выбранные переключатели, опции и текстовые поля
-                        //control_primary: '#00BF96', //Значение цвета в HEX
-
-                        //Цвет платежной формы и ее элементов
-                        //background: '#F2F3F5' //Значение цвета в HEX
-                    //}
-
-                  },
-                  error_callback: function(error) {
-                      console.log(error)
-                  }
-              });
-
-              checkout.on('success', () => {
-                      //Код, который нужно выполнить после успешной оплаты.
-
-                      const sign_up = {
-                          last_name: '{{ data.last_name }}',
-                          first_name: '{{ data.first_name }}',
-                          patronymic: '{{ data.patronymic }}',
-                          phone_number: '{{ data.phone_number }}',
-                          year: {{ data.year }},
-                          month: {{ data.month }},
-                          day: {{ data.day }},
-                          time: {{ data.time }},
-                          service: '{{ data.service.pk }}',
-                          payment_id: '{{ data.payment_id }}'
-                      };
-                      sendRequest('POST', "{% url 'create_obj_of_sign_up' %}", sign_up)
-                          .then(data => {
-                              //Удаление инициализированного виджета
-                              checkout.destroy();
-
-                              window.location.href = 'finish/' + data['pk'];
-                          })
-                          .catch(err => console.log(err))
-                  });
-
-              checkout.on('fail', () => {
-                      //Удаление инициализированного виджета
-                      checkout.destroy();
-                      window.location.href = "{% url 'sign_up_error' %}";
-                  });
-
-              //Отображение платежной формы в контейнере
-              checkout.render('payment-form');
-            </script>
-            {% endif %}
+            <script src="{% static 'sign_up/js/submit.js'%}"></script>
 
         </div>
         <p class="privacy-text">Нажимая "Записаться" вы соглашаетесь с <a style="color: black;" target="_blank" href="{% url 'privacy' %}">политикой конфиденциальности</a></p>

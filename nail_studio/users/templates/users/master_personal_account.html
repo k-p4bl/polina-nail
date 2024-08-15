@@ -5,8 +5,14 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="../../static/users/personal_account.css">
-    <link rel="stylesheet" href="../../static/users/master_personal_account.css">
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'users/css/personal_account.css' %}">
+    <link rel="stylesheet" href="{% static 'users/css/master_personal_account.css' %}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500&display=swap" rel="stylesheet">
 
     <link rel="apple-touch-icon" sizes="180x180" href="https://polina-nail.ru/static/favicons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="https://polina-nail.ru/static/favicons/favicon-32x32.png">
@@ -21,35 +27,41 @@
 </head>
 <body>
 <div>
+    <div class="logo">
+        <a class="logo-link" href="{% url 'main_page' %}">
+            <img class="site_logo" src="{% static 'main_page/images/logo.png' %}" width="60" height="60">
+            <p class="logo-link-text">Polina Nail</p>
+        </a>
+    </div>
     <h1>Личный кабинет мастера</h1>
 
-    <div class="wrapper-block wrapper-button">
-        <a class="link future-sign-up" href="#">Предстоящие записи</a>
+    <div class="wrapper-block wrapper-button button-transform">
+        <a class="link future-sign-up" href="{% url 'users:week_future_sign_ups' %}"">Предстоящие записи</a>
     </div>
 
-    <div class="wrapper-block wrapper-button">
-        <a class="link past-sign-up" href="#">История записей</a>
+    <div class="wrapper-block wrapper-button button-transform">
+        <a class="link past-sign-up" href="{% url 'users:master_p_sign_ups' %}">История записей</a>
     </div>
 
-    <div class="wrapper-block wrapper-button">
-        <a href="#" class="link new-sign-up">Администирование</a>
+    <div class="wrapper-block wrapper-button button-transform">
+        <a href="/admin/" class="link new-sign-up">Администирование</a>
     </div>
 
-    <div class="wrapper-block wrapper-button">
-        <a href="#" class="link ban-list">Бан-лист пользователей</a>
+    <div class="wrapper-block wrapper-button button-transform">
+        <a href="{% url 'users:ban_list' %}" class="link ban-list">Бан-лист пользователей</a>
     </div>
 
-    <div class="wrapper-block wrapper-button">
-        <a href="#" class="link stats">Статистика</a>
+    <div class="wrapper-block wrapper-button disabled">
+        <a href="#" class="link stats link-dis">Статистика</a>
     </div>
 
-    <div class="wrapper-block wrapper-button">
-        <a href="#" class="link notifications">Настроить уведомления</a>
+    <div class="wrapper-block wrapper-button disabled">
+        <a href="#" class="link notifications link-dis">Настроить уведомления</a>
     </div>
 
 </div>
 <div class="wrap-exit">
-    <a class="link exit" href="#">Выйти из аккаунта</a>
+    <a class="exit" href="{% url "users:logout" %}">Выйти из аккаунта</a>
 </div>
 
 </body>

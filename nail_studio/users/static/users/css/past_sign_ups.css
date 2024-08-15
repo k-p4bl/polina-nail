@@ -1,0 +1,42 @@
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f5f5f5;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+    max-width: 900px;
+    flex-direction: column;
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 20px;
+}
+
+thead {
+    background-color: #efefef;
+}
+
+.exit {
+    margin: 0;
+    background-color: #fff;
+    background-image: url("/media/users/free-icon-font-arrow-left-3916810.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 30px;
+    width: 32px;
+    height: 30px;
+    border: #fff 0px solid;
+    cursor: pointer;
+}
+
+.exit:active {
+    transform: scale(.9);
+}
+
+h1 {
+    margin: 0 0 20px;
+}

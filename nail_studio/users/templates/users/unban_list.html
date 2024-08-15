@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang=ru>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'users/css/ban_list.css' %}">
+    <script src="{% static 'users/js/btns_user_in_unban_list.js' %}" defer></script>
+    <script src="{% static 'users/js/searth_ban_list.js' %}" defer></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500&display=swap" rel="stylesheet">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://polina-nail.ru/static/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://polina-nail.ru/static/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://polina-nail.ru/static/favicons/favicon-16x16.png">
+    <link rel="shortcut icon" type="image/png" href="https://polina-nail.ru/static/favicons/favicon.ico"/>
+    <link rel="manifest" href="https://polina-nail.ru/static/favicons/site.webmanifest">
+    <link rel="mask-icon" href="https://polina-nail.ru/static/favicons/safari-pinned-tab.svg" color="#39b329">
+    <meta name="msapplication-TileColor" content="#39b329">
+    <meta name="theme-color" content="#39b329">
+
+    <title>Список пользователей</title>
+</head>
+<body>
+<div style="position: relative">
+    <div class="logo">
+        <a class="logo-link" href="{% url 'main_page' %}">
+            <img class="site_logo" src="{% static 'main_page/images/logo.png' %}" width="60" height="60">
+            <p class="logo-link-text">Polina Nail</p>
+        </a>
+    </div>
+    <h1 style="
+    margin: 0;
+    ">Список<br>пользователей</h1>
+    <input id="searth" placeholder="Поиск"></input>
+    <div class="wrap-btns">
+        {% for u in users %}
+            <button class="btn-user" onclick="clickOnButton('{{ u.last_name }}', {{ u.pk }})">
+                <h3>{{ u.username }}</h3>
+                <p>{{ u.last_name }} {{ u.first_name }} {{ u.userplus.patronymic }}</p>
+            </button>
+        {% endfor %}
+    </div>
+</div>
+
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <h2 id="text-unblock" style="margin-top: 0;"></h2>
+        <div>
+            <button style="background-color: red;" class="modal-btn" id="yes">Да</button>
+            <button class="modal-btn" onclick="clickBtnNo()">Нет</button>
+        </div>
+    </div>
+</div>
+
+</body>

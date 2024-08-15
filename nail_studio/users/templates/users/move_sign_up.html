@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500&display=swap" rel="stylesheet">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://polina-nail.ru/static/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://polina-nail.ru/static/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://polina-nail.ru/static/favicons/favicon-16x16.png">
+    <link rel="shortcut icon" type="image/png" href="https://polina-nail.ru/static/favicons/favicon.ico"/>
+    <link rel="manifest" href="https://polina-nail.ru/static/favicons/site.webmanifest">
+    <link rel="mask-icon" href="https://polina-nail.ru/static/favicons/safari-pinned-tab.svg" color="#39b329">
+    <meta name="msapplication-TileColor" content="#39b329">
+    <meta name="theme-color" content="#39b329">
+    
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'users/css/move_sign_up.css' %}">
+    <link href="{% static 'sign_up/vanilla-calendar/build/vanilla-calendar.min.css'%}" rel="stylesheet">
+    <script src="{% static 'sign_up/vanilla-calendar/build/vanilla-calendar.min.js'%}" defer></script>
+
+    <title>Предстоящие записи</title>
+</head>
+<body>
+    <div class="container">
+        <button class="exit" onclick="location.href='{% url 'users:future_sign_up' pk %}'"></button>
+        <h1 style="font-family: Roboto, sans-serif;">Перенос даты</h1>
+        <form method="post">
+            {% csrf_token %}
+            <div id="calendar"></div>
+            <div class="date-wrap">
+                {{ form.date }}
+                <span id="error-date" style="color: red; font-family: Arial;">{{ form.date.errors }}</span>
+            </div>
+            
+            <div>
+                <div class="wrap-time">
+                    <div class="time">
+                        {% for time in form.time %}
+                        <label class="time-btn-wrap">
+                            {{ time.tag }}
+                            <span class="time-btn">
+                                {{ time.choice_label }}
+                            </span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+                <span id="error-time" style="color: red; font-family: Arial;">{{ form.time.errors }}</span>
+            </div>
+            <script>
+                const requestURL = "{% url 'sign_up' %}"
+                const validateDate = "{% url 'validate_date' %}"
+                
+                let dis = [];
+                {% if dates %}
+                    {% for d in dates %}
+                        dis.push('{{d}}');
+                    {% endfor %}
+                {% endif %}
+            </script>
+            <script src="{% static 'sign_up/js/calendar.js'%}"></script>
+            <button class="submit" type="submit">Сохранить</button>
+        </form>
+    </div>
+</body>
+</html>

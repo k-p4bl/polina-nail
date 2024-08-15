@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 
 
@@ -29,6 +30,19 @@ class Service(models.Model):
         verbose_name_plural = 'Услуги'
 
 
+class AdditionalService(models.Model):
+    objects = models.Manager()
+    add_service = models.CharField(max_length=50, verbose_name='Доп. услуга')
+    price = models.IntegerField(verbose_name='Стоимость')
+
+    def __str__(self):
+        return self.add_service
+
+    class Meta:
+        verbose_name = 'Доп. услугу'
+        verbose_name_plural = 'Доп. услуги'
+
+
 class PersonDataAndDate(models.Model):
     objects = models.Manager()
     last_name = models.CharField(max_length=100, verbose_name='Фамилия')
@@ -38,14 +52,16 @@ class PersonDataAndDate(models.Model):
     date = models.DateField(verbose_name='Дата')
     time = models.ForeignKey(to=Time, on_delete=models.PROTECT, verbose_name='Время')
     service = models.ForeignKey(to=Service, on_delete=models.PROTECT, verbose_name='Услуга')
+    additional_service = models.ManyToManyField(AdditionalService, blank=True, verbose_name='Дополнительные услуги')
     payment_id = models.CharField(max_length=255, verbose_name='id платежа предоплаты', null=True, blank=True,
                                   editable=False)
+    user_id = models.ForeignKey(get_user_model(), models.PROTECT, blank=True, null=True, verbose_name="Клиент")
 
     def __str__(self):
         return self.last_name
 
     class Meta:
-        ordering = ['date', 'time']
+        ordering = ['-date', '-time']
         verbose_name = 'Запись'
         verbose_name_plural = 'Записи'
 

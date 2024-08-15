@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+	    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500&display=swap" rel="stylesheet">
+    
+        <link rel="apple-touch-icon" sizes="180x180" href="https://polina-nail.ru/static/favicons/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="https://polina-nail.ru/static/favicons/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="https://polina-nail.ru/static/favicons/favicon-16x16.png">
+        <link rel="shortcut icon" type="image/png" href="https://polina-nail.ru/static/favicons/favicon.ico"/>
+        <link rel="manifest" href="https://polina-nail.ru/static/favicons/site.webmanifest">
+        <link rel="mask-icon" href="https://polina-nail.ru/static/favicons/safari-pinned-tab.svg" color="#39b329">
+        <meta name="msapplication-TileColor" content="#39b329">
+        <meta name="theme-color" content="#39b329">
+
+        {% load static %}
+        <link rel="stylesheet" href='{% static "users/css/login.css" %}'>
+        <script src="{% static 'sign_up/js/phoneinput.js' %}"></script>
+    
+        <title>Авторизация</title>
+    </head>
+<body>
+    <form method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}">
+        <div class="container">
+            <div class="logo">
+                <a class="logo-link" href="{% url 'main_page' %}">
+                    <img class="site_logo" src="{% static 'main_page/images/logo.png' %}" width="60" height="60">
+                    <p class="logo-link-text">Polina Nail</p>
+                </a>
+            </div>
+            <span style="
+            font-family: Arial;
+            width: 400px;
+            display: block;
+            margin: 0 auto;
+            color: red;
+            outline: red 1px solid;
+            padding: 10px;
+            ">Вы вошли в систему как {{ user.username }}, однако у вас недостаточно прав для просмотра данной страницы. Возможно, вы хотели бы войти в систему, используя другую учётную запись?</span>
+            <span style="color: red; font-family: Arial;">{{ form.non_field_errors }}</span>
+            <p class="label" >Номер телефона</p>
+            <div class="phone-number">
+                {{ form.username }}
+            </div>
+            <span style="color: red; font-family: Arial;">{{ form.username.errors }}</span>
+            <p class="label" >Пароль</p>
+            <div class="password">
+                {{ form.password }}
+            </div>
+            <div class="foget-password">
+                <a id="foget-password" href="{% url 'users:forgot_password' %}">Не помню пароль</a>
+            </div>
+            <span style="color: red; font-family: Arial;">{{ form.password.errors }}</span>
+            <div class="button-wrap">
+                <button type="submit" class="button">Войти</button>
+            </div>
+        </div>
+    </form>
+</body>
+</html>
