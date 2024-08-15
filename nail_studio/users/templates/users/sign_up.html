@@ -7,8 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     {% load static %}
-    <link rel="stylesheet" href="{% static 'users/css/personal_account.css' %}">
-    <link rel="stylesheet" href="{% static 'users/css/master_personal_account.css' %}">
+    <link rel="stylesheet" href="{% static 'users/css/sign_up.css' %}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,7 +22,7 @@
     <meta name="msapplication-TileColor" content="#39b329">
     <meta name="theme-color" content="#39b329">
 
-    <title>Личный кабинет</title>
+    <title>Запись</title>
 </head>
 <body>
 <div>
@@ -33,36 +32,20 @@
             <p class="logo-link-text">Polina Nail</p>
         </a>
     </div>
-    <h1>Личный кабинет мастера</h1>
-
-    <div class="wrapper-block wrapper-button button-transform">
-        <a class="link future-sign-up" href="{% url 'users:week_future_sign_ups' %}"">Предстоящие записи</a>
+    <h1>Запись на {{ person_data.date }}{{ person_data.time }}</h1>
+    <div>
+        <h2>Услуга</h2>
+        <span>{{ person_data.service }}</span>
+        <h2>Доп. услуги</h2>
+        <span>{% if person_data.additional_service.all %}{% for add in person_data.additional_service.all %}{{ add }}<br>{% endfor %}{% else %}—{% endif %}</span>
+        <h2>ФИО клиента</h2>
+        <span>{{ person_data.last_name }} {{ person_data.first_name }} {{ person_data.patronymic }}</span>
+        <h2>Номер телефона клиента</h2>
+        <span>{{ person_data.phone_number }}</span>
+        <h2>Предоплата</h2>
+        <span>{% if person_data.payment_id %}Да{% else %}Нет{% endif %}</span>
+        <h2>Клиент зарегестрирован</h2>
+        <span>{% if person_data.user_id %}Да{% else %}Нет{% endif %}</span>
     </div>
-
-    <div class="wrapper-block wrapper-button button-transform">
-        <a class="link past-sign-up" href="{% url 'users:master_p_sign_ups' %}">История записей</a>
-    </div>
-
-    <div class="wrapper-block wrapper-button button-transform">
-        <a href="/admin/" class="link new-sign-up">Администирование</a>
-    </div>
-
-    <div class="wrapper-block wrapper-button button-transform">
-        <a href="{% url 'users:ban_list' %}" class="link ban-list">Бан-лист пользователей</a>
-    </div>
-
-    <div class="wrapper-block wrapper-button disabled">
-        <a href="#" class="link stats link-dis">Статистика</a>
-    </div>
-
-    <div class="wrapper-block wrapper-button disabled">
-        <a href="#" class="link notifications link-dis">Настроить уведомления</a>
-    </div>
-
 </div>
-<div class="wrap-exit">
-    <a class="exit" href="{% url "users:logout" %}">Выйти из аккаунта</a>
-</div>
-
 </body>
-</html>

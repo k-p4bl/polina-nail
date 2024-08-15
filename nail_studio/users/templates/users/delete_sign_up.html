@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500&display=swap" rel="stylesheet">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://polina-nail.ru/static/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://polina-nail.ru/static/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://polina-nail.ru/static/favicons/favicon-16x16.png">
+    <link rel="shortcut icon" type="image/png" href="https://polina-nail.ru/static/favicons/favicon.ico"/>
+    <link rel="manifest" href="https://polina-nail.ru/static/favicons/site.webmanifest">
+    <link rel="mask-icon" href="https://polina-nail.ru/static/favicons/safari-pinned-tab.svg" color="#39b329">
+    <meta name="msapplication-TileColor" content="#39b329">
+    <meta name="theme-color" content="#39b329">
+    
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'users/css/move_sign_up.css' %}">
+    <link rel="stylesheet" href="{% static 'users/css/future_sign_up.css' %}">
+    <script src="{% static 'users/js/disabled_buttons.js' %}"></script>
+
+    <title>Предстоящие записи</title>
+</head>
+<body>
+    <div class="container">
+        <h1 style="font-family: Roboto, sans-serif;margin:10px 0 0 ;">Отмена записи</h1>
+        <p style="margin: 0; font-size: 17px;font-family: Roboto, sans-serif;">{{sign_up.service}} на {{sign_up.date}} в {{sign_up.time}}</p>
+        <form method="post">
+            {% csrf_token %}
+            <h2 style="font-family: Roboto, sans-serif;">Вы уверены что хотите отменить запись?</h2>
+            <div class="wrap-button">
+                <button type="button" class="move" onclick="location.href='{% url 'users:future_sign_up' pk %}'">Нет</button>
+                <button type="submit" class="cancel">Да</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

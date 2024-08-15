@@ -30,7 +30,7 @@ function sendData(form) {
 
         const FD = new FormData(form);
 
-        XHR.open("POST", "/users/register/");
+        XHR.open("POST", "/users/forgot_password/");
 
         XHR.responseType = 'json'
 
@@ -59,7 +59,7 @@ function validatePhoneNomber(e) {
 
         sendRequest("POST", '/users/phone-check/', phone)
             .then(result => {
-                if (result['phone_is_busy']) {
+                if (!result['phone_is_busy']) {
                     document.querySelector('#phone-is-busy').setAttribute('style', 'display: block;')
                 }else {
                     sendRequest('POST', '/users/flash_call/', telInput.value)
@@ -165,7 +165,8 @@ let countTryes = 3
 
 function validate (div, pincode, correctPin, phone) {
     if (pincode === correctPin) {
-        nextStepRegistration(div, phone)
+        // nextStepRegistration(div, phone)
+        switchThePassword(div, phone)
     } else {
         countTryes = countTryes - 1
         if (countTryes === 0) {
@@ -175,125 +176,17 @@ function validate (div, pincode, correctPin, phone) {
     }
 }
 
-function nextStepRegistration (div, phone) {
-    let text = document.querySelector('.text'),
-        additionalText = document.querySelector('.additional-text');
-    text.innerHTML = "Добавьте ФИО";
-    additionalText.innerHTML = "Они нужны для входа в аккаунт";
-
-    let newDiv = document.createElement('div'),
-        inputLastName = document.createElement('input'),
-        inputFirstName = document.createElement('input'),
-        inputPatronymic = document.createElement('input'),
-        button = document.createElement('button'),
-        pLastName = document.createElement('p'),
-        pFirstName = document.createElement('p'),
-        pPatronymic = document.createElement('p'),
-        divLastName = document.createElement('div'),
-        divFirstName = document.createElement('div'),
-        divPatronymic = document.createElement('div');
-    
-    newDiv.setAttribute('class', 'pers-data-wrap');
-    
-    pLastName.setAttribute('class', 'label');
-    pLastName.innerText = 'Фамилия';
-    inputLastName.setAttribute('type', 'text');
-    inputLastName.setAttribute('class', 'input');
-    divLastName.insertAdjacentElement('beforeend', pLastName);
-    divLastName.insertAdjacentElement('beforeend', inputLastName);
-
-    pFirstName.setAttribute('class', 'label');
-    pFirstName.innerText = "Имя";
-    inputFirstName.setAttribute('type', 'text');
-    inputFirstName.setAttribute('class', 'input');
-    divFirstName.insertAdjacentElement('beforeend', pFirstName)
-    divFirstName.insertAdjacentElement('beforeend', inputFirstName)
-
-    pPatronymic.setAttribute('class', 'label');
-    pPatronymic.innerText = "Отчество";
-    inputPatronymic.setAttribute('type', 'text');
-    inputPatronymic.setAttribute('class', 'input');
-    divPatronymic.insertAdjacentElement('beforeend', pPatronymic)
-    divPatronymic.insertAdjacentElement('beforeend', inputPatronymic)
-
-    button.setAttribute('type', 'button');
-    button.setAttribute('class', 'button-conf button');
-    button.insertAdjacentText('afterbegin', 'Продолжить');
-    button.addEventListener('click', (e) => {
-        errors = document.querySelectorAll('.error')
-        if (errors.length > 0) {
-            for (let i = 0; i < errors.length; i++) {
-                errors[i].remove()
-            }
-        }
-        
-
-        if (inputFirstName.value !== '', inputLastName.value !== '', inputPatronymic.value !== '') {
-            let re = /[А-Я]{1}[а-я]+/
-            if (!re.test(inputLastName.value)) {
-                let error = document.createElement('p')
-                error.setAttribute('class', 'error')
-                error.innerText = '• Неверный формат фамилии'
-                inputLastName.insertAdjacentElement('afterend', error)
-            }
-            if (!re.test(inputFirstName.value)) {
-                let error = document.createElement('p')
-                error.setAttribute('class', 'error')
-                error.innerText = '• Неверный формат имени'
-                inputFirstName.insertAdjacentElement('afterend', error)
-            }
-            if (re.test(inputLastName.value) && re.test(inputFirstName.value)) {
-                let data = Object();
-                data["phone"] = phone;
-                data["lastName"] = inputLastName.value;
-                data["firstName"] = inputFirstName.value;
-                data["patronymic"] = inputPatronymic.value;
-                finalStepRegistration(newDiv, data);
-            }
-        }else {
-            if (inputFirstName.value === '') {
-                let error = document.createElement('p')
-                error.setAttribute('class', 'error')
-                error.innerText = '• Это обязательное поле'
-                inputFirstName.insertAdjacentElement('afterend', error)
-            }
-            if (inputLastName.value === '') {
-                let error = document.createElement('p')
-                error.setAttribute('class', 'error')
-                error.innerText = '• Это обязательное поле'
-                inputLastName.insertAdjacentElement('afterend', error)
-            }
-            if (inputPatronymic.value === '') {
-                let error = document.createElement('p')
-                error.setAttribute('class', 'error')
-                error.innerText = '• Это обязательное поле'
-                inputPatronymic.insertAdjacentElement('afterend', error)
-            }
-        }
-    })
-
-    div.insertAdjacentElement('beforebegin', newDiv);
-    div.remove();
-    newDiv.insertAdjacentElement('beforeend', divLastName);
-    newDiv.insertAdjacentElement('beforeend', divFirstName);
-    newDiv.insertAdjacentElement('beforeend', divPatronymic);
-    newDiv.insertAdjacentElement('beforeend', button);
-}
-
-function finalStepRegistration (div, data) {
+function switchThePassword (div, phone) {
     newForm = document.createElement('form');
     div.insertAdjacentElement('afterend', newForm);
     div.remove();
 
     let text = document.querySelector('.text'),
         additionalText = document.querySelector('.additional-text');
-    text.innerHTML = "Защитите аккаунт<br>надёжным паролем";
+    text.innerHTML = "Введите новый пароль";
     additionalText.innerHTML = "Он не должен совпадать<br>с вашим номером телефона";
 
     let phoneNumber = document.createElement('input'),
-        lastName = document.createElement('input'),
-        firstName = document.createElement('input'),
-        patronymic = document.createElement('input'),
         password = document.createElement('input'),
         shield = document.createElement('p'),
         sixPlus = document.createElement('p'),
@@ -303,15 +196,9 @@ function finalStepRegistration (div, data) {
         button = document.createElement('button');
 
     phoneNumber.type = 'hidden';
-    lastName.type = 'hidden';
-    firstName.type = 'hidden';
-    patronymic.type = 'hidden';
     password.type = 'password';
 
     phoneNumber.name = 'phone_number';
-    lastName.name = 'last_name';
-    firstName.name = 'first_name';
-    patronymic.name = 'patronymic';
     password.name = 'password'
     password.required = true
 
@@ -325,10 +212,7 @@ function finalStepRegistration (div, data) {
     numbers.setAttribute('class', 'pass-text numbers');
     otherSymbols.setAttribute('class', 'pass-text other-symbols');
 
-    phoneNumber.value = data["phone"];
-    lastName.value = data["lastName"];
-    firstName.value = data["firstName"];
-    patronymic.value = data["patronymic"];
+    phoneNumber.value = phone;
 
     shield.innerText = "Надёжный пароль включает:";
     sixPlus.innerText = "Минимум 6 символов";
@@ -340,22 +224,7 @@ function finalStepRegistration (div, data) {
     button.setAttribute('class', 'button')
     button.innerText = "Готово"
 
-    let privacyText = document.createElement('p'),
-        privacyLink = document.createElement('a');
-    privacyText.setAttribute('class', 'privacy-text');
-    privacyText.innerText = 'Нажимая "Готово" вы соглашаетесь с ';
-
-    privacyLink.setAttribute('style', "color: black;");
-    privacyLink.setAttribute('target', "_blank");
-    privacyLink.setAttribute('href', "/privacy/");
-    privacyLink.innerText = "политикой конфиденциальности";
-
-    privacyText.insertAdjacentElement('beforeend', privacyLink);
-
     newForm.insertAdjacentElement('beforeend', phoneNumber);
-    newForm.insertAdjacentElement('beforeend', lastName);
-    newForm.insertAdjacentElement('beforeend', firstName);
-    newForm.insertAdjacentElement('beforeend', patronymic);
     newForm.insertAdjacentElement('beforeend', password);
     newForm.insertAdjacentElement('beforeend', shield);
     newForm.insertAdjacentElement('beforeend', sixPlus);
@@ -363,7 +232,6 @@ function finalStepRegistration (div, data) {
     newForm.insertAdjacentElement('beforeend', numbers);
     newForm.insertAdjacentElement('beforeend', otherSymbols);
     newForm.insertAdjacentElement('beforeend', button);
-    newForm.insertAdjacentElement('beforeend', privacyText);
 
     newForm.addEventListener('submit', (e) => {
         // button.disabled = true;
@@ -372,7 +240,7 @@ function finalStepRegistration (div, data) {
 
         let re = /(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,}/g;
 
-        if (!re.test(e.target[4].value)) {
+        if (!re.test(e.target[1].value)) {
             let res = confirm("Пароль не надёжен! Оставить?")
             if (res) {
                 sendData(newForm)
@@ -381,8 +249,6 @@ function finalStepRegistration (div, data) {
             sendData(newForm)
         }
     });
-
 }
-
 
 button.addEventListener('click', validatePhoneNomber);

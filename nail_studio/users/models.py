@@ -6,4 +6,5 @@ class UserPlus(models.Model):
     objects = models.Manager
     user_id = models.OneToOneField(get_user_model(), models.CASCADE)
     patronymic = models.CharField(max_length=255, verbose_name="Отчество", null=True)
+    not_baned = models.BooleanField(verbose_name="Пользователь не заблокирован", null=True)
 

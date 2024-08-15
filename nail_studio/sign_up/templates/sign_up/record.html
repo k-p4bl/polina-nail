@@ -8,6 +8,7 @@
 
 
     {% load static %}
+    <link href="{% static 'sign_up/css/sign_up.css'%}" rel="stylesheet">
     <link href="{% static 'sign_up/vanilla-calendar/build/vanilla-calendar.min.css'%}" rel="stylesheet">
     <script src="{% static 'sign_up/vanilla-calendar/build/vanilla-calendar.min.js'%}" defer></script>
     <script src="{% static 'sign_up/js/phoneinput.js'%}"></script>
@@ -64,7 +65,11 @@
             
             <div class="name">
                 <p class="text-personal-data">{{ form.person_name.label }}</p>
-                {{ form.person_name }}
+                {% if data %}
+                    <input type="text" name="person_name" id="person-name" value="{{ data.person_name }}" placeholder="Иванов Иван Иванович" required>
+                {% else %}
+                    {{ form.person_name }}
+                {% endif %}
                 <span id="error-name" style="color: red; font-family: Arial;">{{ form.person_name.errors }}</span>
                 <script>
                     document.querySelector('#person-name').addEventListener('input', function(e){
@@ -75,7 +80,11 @@
             </div>
             <div class="number">
                 <p class="text-personal-data">{{ form.phone_number.label }}</p>
-                {{ form.phone_number }}
+                {% if data %}
+                    <input type="text" name="phone_number" id="phone-number" value="{{ data.phone_number }}" data-tel-input maxlength="18" required>
+                {% else %}
+                    {{ form.phone_number }}
+                {% endif %}
                 <span id="error-number" style="color: red; font-family: Arial;">{{ form.phone_number.errors }}</span>
                 <script>
                     document.querySelector('#phone-number').addEventListener('input', function(e){

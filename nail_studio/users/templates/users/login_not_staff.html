@@ -36,6 +36,15 @@
                     <p class="logo-link-text">Polina Nail</p>
                 </a>
             </div>
+            <span style="
+            font-family: Arial;
+            width: 400px;
+            display: block;
+            margin: 0 auto;
+            color: red;
+            outline: red 1px solid;
+            padding: 10px;
+            ">Вы вошли в систему как {{ user.username }}, однако у вас недостаточно прав для просмотра данной страницы. Возможно, вы хотели бы войти в систему, используя другую учётную запись?</span>
             <span style="color: red; font-family: Arial;">{{ form.non_field_errors }}</span>
             <p class="label" >Номер телефона</p>
             <div class="phone-number">
@@ -52,9 +61,6 @@
             <span style="color: red; font-family: Arial;">{{ form.password.errors }}</span>
             <div class="button-wrap">
                 <button type="submit" class="button">Войти</button>
-            </div>
-            <div class="button-wrap">
-                <button type="button" class="button button-reg" onclick="location.href='{% url 'users:register' %}'">Зарегестрироваться</button>
             </div>
         </div>
     </form>

@@ -82,3 +82,8 @@ class YandexPayment:
                     f'Ошибка: "general_decline"<br>'
                     f'Причина не детализирована. Для уточнения подробностей обратитесь в техническую поддержку.'
                 )
+
+    @staticmethod
+    def amount_value(payment_id):
+        payment = Payment.find_one(payment_id)
+        return payment['amount']['value']

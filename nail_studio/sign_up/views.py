@@ -21,12 +21,15 @@ def sign_up(request, service=None):
         """
     list_of_date = models.DisabledDates.objects.get_disabled_dates()
     service_html = ServiceForHtml.objects.all()
+    personal_data = {}
+
     if request.method == 'POST':
         form = SignUpForm(request.POST, error_class=SignUpErrorList)
         if form.is_valid():
             cd = form.cleaned_data
 
             data = {
+                'user_is_auth': request.user.is_authenticated,
                 'last_name': cd['person_name'][0],
                 'first_name': cd['person_name'][1],
                 'patronymic': cd['person_name'][2],
@@ -38,24 +41,43 @@ def sign_up(request, service=None):
                 'service': cd['service'].pk,
                 'add_services_id': cd['add_service']
             }
+            response = {'data': data}
+            if not request.user.is_authenticated or not request.user.userplus.not_baned:
+                prepayment = ServiceForHtml.objects.get(service=cd['service'].service).prepayment
 
-            prepayment = ServiceForHtml.objects.get(service=cd['service'].service).prepayment
+                person_name = f"{data['last_name']} {data['first_name']} {data['patronymic']}"
 
-            person_name = f"{data['last_name']} {data['first_name']} {data['patronymic']}"
+                payment = YandexPayment()
+                payment_response = payment.create_payment(prepayment, cd['service'].service, data['phone_number'],
+                                                          person_name, request.user.is_authenticated, request.user.pk)
 
-            payment = YandexPayment()
-            payment_response = payment.create_payment(prepayment, cd['service'].service, data['phone_number'],
-                                                      person_name, request.user.is_authenticated, request.user.pk)
+                data['payment_id'] = payment_response.id
+                confirmation_token = payment_response.confirmation.confirmation_token
 
-            data['payment_id'] = payment_response.id
-            confirmation_token = payment_response.confirmation.confirmation_token
+                response['confirmation_token'] = confirmation_token
 
-            return JsonResponse({'data': data, 'confirmation_token': confirmation_token})
+            return JsonResponse(response)
 
     else:
-        form = SignUpForm(error_class=SignUpErrorList)
+        if request.user.is_authenticated:
+            person_name = (request.user.last_name + " " + request.user.first_name + " " +
+                           request.user.userplus.patronymic)
+            if request.user.username[1:2] == "7":
+                phone_number = (request.user.username[:2] + " (" + request.user.username[2:5] + ") " +
+                                request.user.username[5:8] + "-" + request.user.username[8:10] + "-" +
+                                request.user.username[10:])
+            else:
+                phone_number = request.user.username
+
+            personal_data['person_name'] = person_name
+            personal_data['phone_number'] = phone_number
+
+            form = SignUpForm(error_class=SignUpErrorList)
+        else:
+            form = SignUpForm(error_class=SignUpErrorList)
 
     context = {
+        "data": personal_data,
         'dates': list_of_date,
         'service': service,
         'form': form,
@@ -69,16 +91,22 @@ def sign_up(request, service=None):
 def create_obj_of_sign_up(request):
     data = json.loads(request.body)
     date = datetime.date(data['year'], data['month'], data['day'])
+    try:
+        payment = data['payment_id']
+    except KeyError:
+        payment = None
 
-    person_name = models.PersonDataAndDate.objects.create(last_name=data['last_name'],
-                                                          first_name=data['first_name'],
-                                                          patronymic=data['patronymic'],
-                                                          phone_number=data['phone_number'],
-                                                          date=date,
-                                                          time=models.Time.objects.get(pk=data['time']),
-                                                          service=models.Service.objects.get(pk=data['service']),
-                                                          payment_id=data['payment_id']
-                                                          )
+    person_name = models.PersonDataAndDate.objects.create(
+        last_name=data['last_name'],
+        first_name=data['first_name'],
+        patronymic=data['patronymic'],
+        phone_number=data['phone_number'],
+        date=date,
+        time=models.Time.objects.get(pk=data['time']),
+        service=models.Service.objects.get(pk=data['service']),
+        payment_id=payment,
+        user_id=request.user if request.user.is_authenticated else None
+    )
     if models.PersonDataAndDate.objects.filter(date=date).count() >= models.Time.objects.count():
         models.DisabledDates.objects.create(start_date=date, creator_is_human=False)
 

@@ -7,8 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     {% load static %}
-    <link rel="stylesheet" href="{% static 'users/css/personal_account.css' %}">
-    <link rel="stylesheet" href="{% static 'users/css/master_personal_account.css' %}">
+    <link rel="stylesheet" href="{% static 'users/css/week_future_sign_ups.css' %}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,7 +22,7 @@
     <meta name="msapplication-TileColor" content="#39b329">
     <meta name="theme-color" content="#39b329">
 
-    <title>Личный кабинет</title>
+    <title>Записи на неделю</title>
 </head>
 <body>
 <div>
@@ -33,36 +32,33 @@
             <p class="logo-link-text">Polina Nail</p>
         </a>
     </div>
-    <h1>Личный кабинет мастера</h1>
-
-    <div class="wrapper-block wrapper-button button-transform">
-        <a class="link future-sign-up" href="{% url 'users:week_future_sign_ups' %}"">Предстоящие записи</a>
+    <h1>Записи на неделю</h1>
+    {% for day_of_week, sign_ups_on_day in sign_ups.items %}
+    <div class="block">
+        {% if forloop.last %}
+            <h2 style="color: red;">{{day_of_week}}, {{ sign_ups_on_day.0 }}</h2>
+            <h3 style="color: red;">Выходной</h3>
+        {% else %}
+            <h2>{{day_of_week}}, {{ sign_ups_on_day.0 }}</h2>
+            {% if sign_ups_on_day.1 %}
+                {% for sign_up in sign_ups_on_day.1 %}
+                        <div class="wrap-data">
+                            <h3>{{ sign_up.time.time }}</h3>
+                            <h4>{{ sign_up.service }}</h4>
+                            <div class="add-serv">
+                            {% for add_serv in sign_up.additional_service.all %}<h6>{{ add_serv }}</h6>{% endfor %}
+                            </div>
+                            <div class="pers-data">
+                            <h5>{{ sign_up.last_name }} {{ sign_up.first_name }} {{ sign_up.patronymic }}</h5>
+                            <h5><a href="tel:{{ sign_up.phone_number }}">{{ sign_up.phone_number }}</a></h5>
+                            </div>
+                        </div>
+                {% endfor %}
+            {% else %}
+                <h3>Нет записей</h3>
+            {% endif %}
+        {% endif %}
     </div>
-
-    <div class="wrapper-block wrapper-button button-transform">
-        <a class="link past-sign-up" href="{% url 'users:master_p_sign_ups' %}">История записей</a>
-    </div>
-
-    <div class="wrapper-block wrapper-button button-transform">
-        <a href="/admin/" class="link new-sign-up">Администирование</a>
-    </div>
-
-    <div class="wrapper-block wrapper-button button-transform">
-        <a href="{% url 'users:ban_list' %}" class="link ban-list">Бан-лист пользователей</a>
-    </div>
-
-    <div class="wrapper-block wrapper-button disabled">
-        <a href="#" class="link stats link-dis">Статистика</a>
-    </div>
-
-    <div class="wrapper-block wrapper-button disabled">
-        <a href="#" class="link notifications link-dis">Настроить уведомления</a>
-    </div>
-
+    {% endfor %}
 </div>
-<div class="wrap-exit">
-    <a class="exit" href="{% url "users:logout" %}">Выйти из аккаунта</a>
-</div>
-
 </body>
-</html>

@@ -50,32 +50,7 @@ form.addEventListener("submit", function (event) {
 
     sendData()
         .then(response => {
-            //Инициализация виджета. Все параметры обязательные.
-            const checkout = new window.YooMoneyCheckoutWidget({
-                confirmation_token: response["confirmation_token"], //Токен, который перед проведением оплаты нужно получить от ЮKassa
-
-                //При необходимости можно изменить цвета виджета, подробные настройки см. в документации
-                customization: {
-                    modal: true
-
-                    //Настройка цветовой схемы, минимум один параметр, значения цветов в HEX
-                    //colors: {
-                    //Цвет акцентных элементов: кнопка Заплатить, выбранные переключатели, опции и текстовые поля
-                    //control_primary: '#00BF96', //Значение цвета в HEX
-
-                    //Цвет платежной формы и ее элементов
-                    //background: '#F2F3F5' //Значение цвета в HEX
-                    //}
-
-                },
-                error_callback: function(error) {
-                    console.log(error)
-                }
-            });
-
-            checkout.on('success', () => {
-                //Код, который нужно выполнить после успешной оплаты.
-
+            if (response.data['user_is_auth']){
                 const sign_up = {
                     last_name: response.data['last_name'],
                     first_name: response.data['first_name'],
@@ -86,26 +61,71 @@ form.addEventListener("submit", function (event) {
                     day: response.data['day'],
                     time: response.data['time'],
                     service: response.data['service'],
-                    add_services_id: response.data['add_services_id'],
-                    payment_id: response.data['payment_id']
+                    add_services_id: response.data['add_services_id'],                    
                 };
                 sendRequest('POST', requestURL + "create_obj_of_sign_up/", sign_up)
                     .then(data => {
-                        //Удаление инициализированного виджета
-                        checkout.destroy();
-
                         window.location.href = 'finish/' + data['pk'];
                     })
                     .catch(err => console.log(err))
-            });
-
-            checkout.on('fail', () => {
-                //Удаление инициализированного виджета
-                checkout.destroy();
-                window.location.href = requestURL + "error/";
-            });
-
-            //Отображение платежной формы в контейнере
-            checkout.render('payment-form');
+            }else {
+                //Инициализация виджета. Все параметры обязательные.
+                const checkout = new window.YooMoneyCheckoutWidget({
+                    confirmation_token: response["confirmation_token"], //Токен, который перед проведением оплаты нужно получить от ЮKassa
+    
+                    //При необходимости можно изменить цвета виджета, подробные настройки см. в документации
+                    customization: {
+                        modal: true
+    
+                        //Настройка цветовой схемы, минимум один параметр, значения цветов в HEX
+                        //colors: {
+                        //Цвет акцентных элементов: кнопка Заплатить, выбранные переключатели, опции и текстовые поля
+                        //control_primary: '#00BF96', //Значение цвета в HEX
+    
+                        //Цвет платежной формы и ее элементов
+                        //background: '#F2F3F5' //Значение цвета в HEX
+                        //}
+    
+                    },
+                    error_callback: function(error) {
+                        console.log(error)
+                    }
+                });
+    
+                checkout.on('success', () => {
+                    //Код, который нужно выполнить после успешной оплаты.
+    
+                    const sign_up = {
+                        last_name: response.data['last_name'],
+                        first_name: response.data['first_name'],
+                        patronymic: response.data['patronymic'],
+                        phone_number: response.data['phone_number'],
+                        year: response.data['year'],
+                        month: response.data['month'],
+                        day: response.data['day'],
+                        time: response.data['time'],
+                        service: response.data['service'],
+                        add_services_id: response.data['add_services_id'],
+                        payment_id: response.data['payment_id']
+                    };
+                    sendRequest('POST', requestURL + "create_obj_of_sign_up/", sign_up)
+                        .then(data => {
+                            //Удаление инициализированного виджета
+                            checkout.destroy();
+    
+                            window.location.href = 'finish/' + data['pk'];
+                        })
+                        .catch(err => console.log(err))
+                });
+    
+                checkout.on('fail', () => {
+                    //Удаление инициализированного виджета
+                    checkout.destroy();
+                    window.location.href = requestURL + "error/";
+                });
+    
+                //Отображение платежной формы в контейнере
+                checkout.render('payment-form');
+            }
         })
 });

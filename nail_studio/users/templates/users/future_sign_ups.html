@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500&display=swap" rel="stylesheet">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://polina-nail.ru/static/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://polina-nail.ru/static/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://polina-nail.ru/static/favicons/favicon-16x16.png">
+    <link rel="shortcut icon" type="image/png" href="https://polina-nail.ru/static/favicons/favicon.ico"/>
+    <link rel="manifest" href="https://polina-nail.ru/static/favicons/site.webmanifest">
+    <link rel="mask-icon" href="https://polina-nail.ru/static/favicons/safari-pinned-tab.svg" color="#39b329">
+    <meta name="msapplication-TileColor" content="#39b329">
+    <meta name="theme-color" content="#39b329">
+    
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'users/css/future_sign_ups.css' %}">
+
+    <title>Предстоящие записи</title>
+</head>
+<body>
+    <div class="container">
+        <button class="exit" onclick="location.href='{% url 'users:personal-account' %}'"></button>
+        <h1>Предстоящие записи</h1>
+        {% if f_sign_ups %}
+            {% for sign_up in f_sign_ups %}
+            <button class="sign_up" onclick="location.href='{% url 'users:future_sign_up' sign_up.pk %}'">
+                <h2>{{ sign_up.service }}</h2>
+                <span class="btn-text">{{ sign_up.date }}</span>
+                <span class="btn-text">в {{ sign_up.time }}</span>
+            </button>
+            {% endfor %}
+        {% else %}
+            <h2>Предстоящий записей нет</h2>
+        {% endif %}
+    </div>
+</body>
+</html>

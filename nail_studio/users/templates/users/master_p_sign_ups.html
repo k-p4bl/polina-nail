@@ -7,8 +7,10 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     {% load static %}
-    <link rel="stylesheet" href="{% static 'users/css/personal_account.css' %}">
-    <link rel="stylesheet" href="{% static 'users/css/master_personal_account.css' %}">
+    <link rel="stylesheet" href="{% static 'users/css/master_p_sign_ups.css' %}">
+
+    <script src="{% static 'users/js/sendRequest.js' %}"></script>
+    <script src="{% static 'users/js/display_dates.js' %}"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,7 +25,7 @@
     <meta name="msapplication-TileColor" content="#39b329">
     <meta name="theme-color" content="#39b329">
 
-    <title>Личный кабинет</title>
+    <title>Прошедшие записи</title>
 </head>
 <body>
 <div>
@@ -33,36 +35,11 @@
             <p class="logo-link-text">Polina Nail</p>
         </a>
     </div>
-    <h1>Личный кабинет мастера</h1>
-
-    <div class="wrapper-block wrapper-button button-transform">
-        <a class="link future-sign-up" href="{% url 'users:week_future_sign_ups' %}"">Предстоящие записи</a>
-    </div>
-
-    <div class="wrapper-block wrapper-button button-transform">
-        <a class="link past-sign-up" href="{% url 'users:master_p_sign_ups' %}">История записей</a>
-    </div>
-
-    <div class="wrapper-block wrapper-button button-transform">
-        <a href="/admin/" class="link new-sign-up">Администирование</a>
-    </div>
-
-    <div class="wrapper-block wrapper-button button-transform">
-        <a href="{% url 'users:ban_list' %}" class="link ban-list">Бан-лист пользователей</a>
-    </div>
-
-    <div class="wrapper-block wrapper-button disabled">
-        <a href="#" class="link stats link-dis">Статистика</a>
-    </div>
-
-    <div class="wrapper-block wrapper-button disabled">
-        <a href="#" class="link notifications link-dis">Настроить уведомления</a>
-    </div>
-
+    <h1>Прошедшие записи</h1>
+    <div class="container"></div>
+    <script>
+        sendRequest("GET", "{% url 'users:all_past_sign_ups' %}")
+            .then(result => displayDates(result))
+    </script>
 </div>
-<div class="wrap-exit">
-    <a class="exit" href="{% url "users:logout" %}">Выйти из аккаунта</a>
-</div>
-
 </body>
-</html>

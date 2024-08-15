@@ -7,8 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     {% load static %}
-    <link rel="stylesheet" href="{% static 'users/css/personal_account.css' %}">
-    <link rel="stylesheet" href="{% static 'users/css/master_personal_account.css' %}">
+    <link rel="stylesheet" href="{% static 'users/css/ban_list.css' %}">
+    <script src="{% static 'users/js/btns_user_in_ban_list.js' %}" defer></script>
+    <script src="{% static 'users/js/searth_ban_list.js' %}" defer></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,46 +24,37 @@
     <meta name="msapplication-TileColor" content="#39b329">
     <meta name="theme-color" content="#39b329">
 
-    <title>Личный кабинет</title>
+    <title>Список заблокированных пользователей</title>
 </head>
 <body>
-<div>
+<div style="position: relative">
     <div class="logo">
         <a class="logo-link" href="{% url 'main_page' %}">
             <img class="site_logo" src="{% static 'main_page/images/logo.png' %}" width="60" height="60">
             <p class="logo-link-text">Polina Nail</p>
         </a>
     </div>
-    <h1>Личный кабинет мастера</h1>
-
-    <div class="wrapper-block wrapper-button button-transform">
-        <a class="link future-sign-up" href="{% url 'users:week_future_sign_ups' %}"">Предстоящие записи</a>
+    <h1>Список<br>заблокированных<br>пользователей</h1>
+    <button class="add-user" onclick="location.href='{% url 'users:unban_list' %}'">Добавить пользователя</button>
+    <input id="searth" placeholder="Поиск"></input>
+    <div class="wrap-btns">
+        {% for u in users %}
+            <button class="btn-user" onclick="clickOnButton('{{ u.last_name }}', {{ u.pk }})">
+                <h3>{{ u.username }}</h3>
+                <p>{{ u.last_name }} {{ u.first_name }} {{ u.userplus.patronymic }}</p>
+            </button>
+        {% endfor %}
     </div>
-
-    <div class="wrapper-block wrapper-button button-transform">
-        <a class="link past-sign-up" href="{% url 'users:master_p_sign_ups' %}">История записей</a>
-    </div>
-
-    <div class="wrapper-block wrapper-button button-transform">
-        <a href="/admin/" class="link new-sign-up">Администирование</a>
-    </div>
-
-    <div class="wrapper-block wrapper-button button-transform">
-        <a href="{% url 'users:ban_list' %}" class="link ban-list">Бан-лист пользователей</a>
-    </div>
-
-    <div class="wrapper-block wrapper-button disabled">
-        <a href="#" class="link stats link-dis">Статистика</a>
-    </div>
-
-    <div class="wrapper-block wrapper-button disabled">
-        <a href="#" class="link notifications link-dis">Настроить уведомления</a>
-    </div>
-
 </div>
-<div class="wrap-exit">
-    <a class="exit" href="{% url "users:logout" %}">Выйти из аккаунта</a>
+
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <h2 id="text-unblock" style="margin-top: 0;"></h2>
+        <div>
+            <button class="modal-btn" id="yes">Да</button>
+            <button style="background-color: red;" class="modal-btn" onclick="clickBtnNo()">Нет</button>
+        </div>
+    </div>
 </div>
 
 </body>
-</html>

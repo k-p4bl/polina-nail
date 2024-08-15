@@ -61,7 +61,7 @@ class PersonDataAndDate(models.Model):
         return self.last_name
 
     class Meta:
-        ordering = ['date', 'time']
+        ordering = ['-date', '-time']
         verbose_name = 'Запись'
         verbose_name_plural = 'Записи'
 

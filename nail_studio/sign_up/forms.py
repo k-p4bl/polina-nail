@@ -79,7 +79,8 @@ class SignUpForm(forms.Form):
 class SignUpAdminForm(forms.ModelForm):
     class Meta:
         model = PersonDataAndDate
-        fields = ['service', 'additional_service', 'last_name', 'first_name', 'patronymic', 'phone_number', 'date', 'time']
+        fields = ['service', 'additional_service', 'last_name', 'first_name', 'patronymic', 'phone_number', 'date',
+                  'time', 'user_id']
 
     def clean_time(self):
         persons_qs = PersonDataAndDate.objects.filter(date=self.cleaned_data['date'])
