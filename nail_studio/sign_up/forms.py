@@ -27,7 +27,7 @@ class SignUpForm(forms.Form):
                                  )
 
     add_service = forms.MultipleChoiceField(
-        # choices=[(i.pk, i) for i in AdditionalService.objects.all()],
+        choices=[(i.pk, i) for i in AdditionalService.objects.all()],
         # choices=[(0, 'Снятие чужой работы'), (1, 'Дизайн'),
         #          (2, 'Парафинотерапия')],
         label='Доп. услуга',
