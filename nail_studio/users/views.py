@@ -74,7 +74,8 @@ def register(request):
 
         UserPlus.objects.create(user_id=user, patronymic=data['patronymic'], not_baned=True)
 
-        return redirect("users:login", permanent=True)
+        # return redirect("users:login", permanent=True)
+        return JsonResponse({"success": True})
 
     return render(request, 'users/register.html')
 
@@ -137,7 +138,8 @@ def forgot_password(request):
         user.set_password(request.POST['password'])
         user.save()
 
-        return redirect("users:login", permanent=True)
+        return JsonResponse({"success": True})
+        # return redirect("users:login", permanent=True)
 
     return render(request, "users/forgot_password.html")
 

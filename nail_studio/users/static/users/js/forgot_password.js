@@ -244,9 +244,15 @@ function switchThePassword (div, phone) {
             let res = confirm("Пароль не надёжен! Оставить?")
             if (res) {
                 sendData(newForm)
+                    .then(result => {
+                        location.href = "/users/login/"
+                    })
             }
         }else {
             sendData(newForm)
+                .then(result => {
+                    location.href = "/users/login/"
+                })
         }
     });
 }
