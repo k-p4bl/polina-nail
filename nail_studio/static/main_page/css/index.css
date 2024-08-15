@@ -35,6 +35,7 @@ p {
 .wrapper-header-link {
 	display: flex;
 	justify-content: space-between;
+	align-items: center;
 	padding: 30px;
 }
 
@@ -84,15 +85,27 @@ p {
 	justify-content: space-between;
 	align-items: center;
 	min-width: 30%;
+	position: relative;
 }
 
 .button-make-an-appointment {
-    background: #efefef;
-	padding: 10px 30px;
+	width: 50px;
+	height: 50px;
+	background-image: url(/media/main_page/free-icon-font-circle-user-9821482.png);
+	background-size: 50px;
+	background-repeat: no-repeat;
+	background-color: transparent;
 	border: 0;
 	border-radius: 5px;
     -webkit-appearance: none;
-
+}
+.button-make-an-appointment::before{
+	content: "Личный кабинет";
+	display: block;
+	position: absolute;
+	left: 160px;
+	top: 16px;
+	font-size: 16px;
 }
 
 .button-make-an-appointment:hover {
@@ -385,6 +398,71 @@ footer {
         width: 90%;
     }
 }
+@media (max-width: 1170px) {
+	.button-make-an-appointment::before {
+		left: 150px;
+	}
+}
+
+@media (max-width: 1145px) {
+	.button-make-an-appointment::before {
+		left: 140px;
+	}
+}
+
+@media (max-width: 1110px) {
+	.button-make-an-appointment::before {
+		left: 140px;
+	}
+}
+
+@media (max-width: 1100px) {
+	.button-make-an-appointment::before {
+		left: 130px;
+	}
+}
+
+@media (max-width: 1070px) {
+	.button-make-an-appointment::before {
+		left: 120px;
+	}
+}
+
+@media (max-width: 1040px) {
+	.button-make-an-appointment::before {
+		left: 110px;
+	}
+}
+
+@media (max-width: 1000px) {
+	.button-make-an-appointment::before {
+		left: 100px;
+	}
+}
+
+@media (max-width: 960px) {
+	.button-make-an-appointment::before {
+		left: 90px;
+	}
+}
+
+@media (max-width: 920px) {
+	.button-make-an-appointment::before {
+		left: 80px;
+	}
+}
+
+@media (max-width: 900px) {
+	.button-make-an-appointment::before {
+		left: 70px;
+	}
+}
+
+@media (max-width: 860px) {
+	.button-make-an-appointment::before {
+		display: none;
+	}
+}
 
 @media (max-width: 800px) {
     .reviews-wrapper{
@@ -416,7 +494,10 @@ footer {
 		font-size: 24px;
 		font-weight: 300;
 	}
-	.button-make-an-appointment {display: none;}
+	.button-make-an-appointment {
+		margin-right: 10px;
+		margin-left: 20px;
+	}
 	.hamburger-button {
 		display: flex;
 		position: relative;
@@ -494,3 +575,14 @@ footer {
     }
 }
 
+@media (max-width: 383px) {
+    .button-make-an-appointment {
+		margin-left: 10px;
+	}
+}
+
+@media (max-width: 375px) {
+    .button-make-an-appointment {
+		margin-left: 2px;
+	}
+}

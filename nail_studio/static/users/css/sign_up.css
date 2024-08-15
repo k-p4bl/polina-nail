@@ -1,0 +1,32 @@
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    position: relative;
+    min-height: 100vh;
+    justify-content: center;
+    margin: 0;
+    background: #f5f5f5;
+    font-family: "Roboto", sans-serif;
+}
+
+.logo {
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.logo-link-text {
+    margin-left: 10px;
+    font-size: 24px;
+    color: black;
+}
