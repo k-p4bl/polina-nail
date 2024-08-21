@@ -260,7 +260,8 @@ def all_past_sign_ups(request):
     now = timezone.localtime()
     sign_ups = PersonDataAndDate.objects.filter(date__lt=datetime.date(now.year, now.month, now.day))
     dates = {}
-    locale.setlocale(locale.LC_TIME, 'ru_RU')
+    # locale.setlocale(locale.LC_TIME, 'ru_RU')
+    locale.setlocale(locale.LC_ALL, ('ru_RU', 'UTF-8'))
 
     for s in sign_ups:
         if dates.get(s.date.strftime("%Y") + "г."):
