@@ -1,9 +1,8 @@
-let ten = document.querySelector('#id_time_0');
-let thirteen = document.querySelector('#id_time_1');
-let sixteen = document.querySelector('#id_time_2');
-ten.disabled = true;
-thirteen.disabled = true;
-sixteen.disabled = true;
+const times = document.querySelectorAll("input[data-time-input]")
+
+for (let i = 0; i < times.length; i++) {
+    times[i].disabled = true
+}
 
 function sendRequest (method, url, data) {
     return new Promise ((resolve, reject) => {
@@ -54,17 +53,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 sendRequest('POST', validateDate, self.selectedDates)
                     .then(data => {
-                        ten.disabled = data['10'];
-                        if (ten.disabled) {
-                            ten.checked = false
-                        }
-                        thirteen.disabled = data['13'];
-                        if (thirteen.disabled) {
-                            thirteen.checked = false
-                        }
-                        sixteen.disabled = data['16'];
-                        if (sixteen.disabled) {
-                            sixteen.checked = false
+                        for (timeId in data) {
+                            let timeDisabled = data[timeId]
+                            let timeInput = document.querySelector("#id_time_" + timeId)
+                            timeInput.disabled = timeDisabled
                         }
                     })
                     .catch(err => console.log(err))
@@ -74,12 +66,8 @@ document.addEventListener('DOMContentLoaded', () => {
     );
     calendar.init();
 });
-if (ten.disabled) {
-    ten.checked = false
-}
-if (thirteen.disabled) {
-    thirteen.checked = false
-}
-if (sixteen.disabled) {
-    sixteen.checked = false
+for (let i = 0; i < times.length; i++) {
+    if (times[i].disabled) {
+        times[i].checked = false
+    }
 }

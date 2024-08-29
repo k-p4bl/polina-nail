@@ -11,6 +11,7 @@ from . import models
 from django.views.decorators.csrf import csrf_exempt
 
 from .forms import SignUpForm, SignUpErrorList
+from .models import Time
 
 
 def sign_up(request, service=None):
@@ -134,18 +135,30 @@ def validate_date(request):
         date = date[0]
     # Если даты нет, то отправляю объект, который деактивирует все кнопки
     except IndexError:
-        return JsonResponse({'10': True, '13': True, '16': True, })
+        times = Time.objects.all().count()
+        res = {}
+        for i in range(times):
+            res[str(i)] = True
+        return JsonResponse(res)
     year, month, day = date.split('-')
     select_day = datetime.date(int(year), int(month), int(day))
-    # Создаю словарь со значениями по умолчанию (все кнопки активны)
-    response = {'10': False,
-                '13': False,
-                '16': False,
-                }
 
-    for t in models.PersonDataAndDate.objects.filter(date=select_day):
-        t = t.time.time.strftime('%H')
-        response[t] = True
+    times = Time.objects.all()
+    response = {}
+    s_ups = models.PersonDataAndDate.objects.filter(date=select_day)
+    for i in range(times.count()):
+        if s_ups:
+            for s_up in s_ups:
+                if s_up.time == times[i]:
+                    response[str(i)] = True
+                    break
+                else:
+                    response[str(i)] = False
+        else:
+            response[str(i)] = False
+
+    # for s_up in models.PersonDataAndDate.objects.filter(date=select_day):
+    #     response[str(s_up.time.pk)] = True
 
     return JsonResponse(response)
 
